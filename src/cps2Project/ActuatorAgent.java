@@ -1,5 +1,8 @@
 package cps2Project;
 
+import repast.simphony.engine.watcher.Watch;
+import repast.simphony.engine.watcher.WatcherTriggerSchedule;
+
 public class ActuatorAgent extends Agent{
 	
 	protected double power; //for now, maybe we can represent the actuator power by a variable (e.g. from 0 to 100)
@@ -28,6 +31,25 @@ public class ActuatorAgent extends Agent{
 	public void compute() {
 		// TODO Auto-generated method stub
 		//System.out.println("AA #" + IDActuatorAgent + " is at " + power + "% of full power");
+	}
+	
+	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "increaseDownHoleActu", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void temperatureDanger(SensorAgent sensorAgent) {
+		
+		if (downhole) //must listen to the SensorAgent only if it is the downhole actuator agent
+		{
+			if (power< 95.0)
+			{
+				power = power + Math.random()*5;
+				System.out.println("AA #" + IDActuatorAgent + " is at " + power + "% of full power");
+			}
+			else
+			{
+				System.out.println("Error : AA #" + IDActuatorAgent + " is already at " + power + "% of full power!");
+				//TODO: message the Field Agent to start the uphole actuator agent to relieve the downhole actuator agent
+			}
+		}
+
 	}
 
 }
