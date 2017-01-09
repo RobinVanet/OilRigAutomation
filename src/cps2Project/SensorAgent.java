@@ -28,7 +28,7 @@ public class SensorAgent extends Agent{
 	@Override
 	public void compute() {
 		// TODO Auto-generated method stub
-		System.out.println("Agent is breathing!");
+		System.out.println("Agent "+ getIDSensorAgent()+" is breathing!");
 		if (temperature<100)
 		{
 			//do nothing
