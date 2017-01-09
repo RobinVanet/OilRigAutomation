@@ -253,3 +253,4 @@ java.lang.NullPointerException
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+WARN  [AWT-EventQueue-0] 2017-01-09 16:50:24,086 repast.simphony.engine.watcher.WatcheeInstrumentor - Unable to find class(es) to watch: [CPS2Project.SensorAgent] classpath: C:\Users\Robin\workspace\CPS2Project\bin
