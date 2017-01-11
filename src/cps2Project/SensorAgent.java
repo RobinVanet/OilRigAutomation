@@ -4,6 +4,8 @@ public class SensorAgent extends Agent{
 	
 	protected double temperature;
 	protected int IDSensorAgent;
+	protected int neighborUp;
+	protected int neighborDown;
 	protected boolean danger; //will convey the message that the sensor feels a high temperature
 	protected boolean actionTaken; //will convey the message that the temperature was so high, the sensor agent did something.
 	protected boolean increaseDownHoleActu; //will convey the command for the downhole actuator agent to increase power
@@ -20,8 +22,10 @@ public class SensorAgent extends Agent{
 		return IDSensorAgent;
 	}
 
-	public SensorAgent(int IDSensorAgent) {
+	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown) {
 		this.IDSensorAgent = IDSensorAgent;
+		this.neighborUp = neighborUp;
+		this.neighborDown = neighborDown;
 		this.temperature = 0;
 		this.danger = false;
 		this.actionTaken = false;

@@ -7,6 +7,7 @@ public class ActuatorAgent extends Agent{
 	
 	protected double power; //for now, maybe we can represent the actuator power by a variable (e.g. from 0 to 100)
 	protected int IDActuatorAgent;
+	protected int IDPilotAgent;
 	protected boolean downhole; //we can represent the place of the actuator with this boolean (true = downhole, false = uphole)
 	
 	public double getPower() {
@@ -21,8 +22,9 @@ public class ActuatorAgent extends Agent{
 		return IDActuatorAgent;
 	}
 
-	public ActuatorAgent(int IDActuatorAgent,boolean downhole) {
+	public ActuatorAgent(int IDActuatorAgent,boolean downhole,int IDPilotAgent) {
 		this.IDActuatorAgent = IDActuatorAgent;
+		this.IDPilotAgent = IDPilotAgent;
 		this.downhole = downhole;
 		this.power = 0.0; //we start with the Actuator Agent switched off
 	}

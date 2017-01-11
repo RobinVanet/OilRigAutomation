@@ -6,9 +6,15 @@ import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 public class FieldAgent extends Agent{
 	
 	protected int IDFieldAgent;
+	protected int IDUpperSensorAgent;
+	
+	public int getIDFieldAgent() {
+		return IDFieldAgent;
+	}
 
-	public FieldAgent(int IDFieldAgent) {
+	public FieldAgent(int IDFieldAgent, int IDUpperSensorAgent) {
 		this.IDFieldAgent = IDFieldAgent;
+		this.IDUpperSensorAgent = IDUpperSensorAgent;
 	}
 	
 	@Override
