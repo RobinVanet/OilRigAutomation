@@ -55,10 +55,10 @@ public class SensorAgent extends Agent{
 		//System.out.println("Agent "+ getIDSensorAgent()+" is breathing!");
 		//temperature = Math.random()*130;
 		temperature++;
-		if (IDSensorAgent==2 && temperature==100)
+		if (IDSensorAgent==2 && temperature%10==0) //every 10 ticks, new vote
 		{
-			startVote();
 			System.out.println("Starting a vote");
+			startVote();			
 		}
 			
 		if (IDSensorAgent ==2 && voteResult!=0)
@@ -91,7 +91,8 @@ public class SensorAgent extends Agent{
 			if (voteList.size()!=nbSensor)//if it isn't, we update the vote
 			{
 				//TODO: decide the vote of the agent
-				boolean vote = true; //for now it will be true
+//				boolean vote = true; //for now it will be true
+				boolean vote = (Math.random() < 0.5); //random vote
 				System.out.println(voteList.toString());
 				voteList.add(vote);
 				//we pass the vote to the others
