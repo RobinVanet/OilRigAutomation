@@ -33,7 +33,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		/*--------------CREATING THE SENSOR AGENTS-----------------*/
 		for (int i = 0;i<nbSensor;i++)
 		{
-			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1);
+			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor);
 			context.add(sa);
 			nextID++;
 		}
