@@ -561,3 +561,66 @@ Caused by: java.lang.IndexOutOfBoundsException: Index: 5, Size: 5
 	at java.util.ArrayList.set(ArrayList.java:444)
 	at cps2Project.SensorAgent.vote(SensorAgent.java:104)
 	... 111 more
+ERROR [Thread-5] 2017-01-15 14:50:52,798 repast.simphony.engine.watcher.Notifier2 - Error while initializing watcher triggerScheduler
+java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at repast.simphony.engine.schedule.CallBackAction.execute(CallBackAction.java:129)
+	at repast.simphony.engine.watcher.ArgMatcher$SetWatcheeTrigger.execute(ArgMatcher.java:47)
+	at repast.simphony.engine.watcher.ImmediateExecutor.scheduleExecution(ImmediateExecutor.java:31)
+	at repast.simphony.engine.watcher.Notifier2$SetupTrigger.scheduleExecution(Notifier2.java:56)
+	at repast.simphony.engine.watcher.Notifier2.triggered(Notifier2.java:150)
+	at repast.simphony.engine.watcher.WatcherTrigger.notify(WatcherTrigger.java:116)
+	at repast.simphony.engine.watcher.WatcherTrigger.triggered(WatcherTrigger.java:146)
+	at cps2Project.SensorAgent.startVote(SensorAgent.java:161)
+	at cps2Project.SensorAgent.compute(SensorAgent.java:66)
+	at cps2Project.Agent$$FastClassByCGLIB$$fdae4be4.invoke(<generated>)
+	at net.sf.cglib.reflect.FastMethod.invoke(FastMethod.java:53)
+	at repast.simphony.engine.schedule.DynamicTargetAction.execute(DynamicTargetAction.java:69)
+	at repast.simphony.engine.controller.ScheduledMethodControllerAction$ScheduleMethodAllAction.execute(ScheduledMethodControllerAction.java:333)
+	at repast.simphony.engine.schedule.DefaultAction.execute(DefaultAction.java:38)
+	at repast.simphony.engine.schedule.ScheduleGroup.executeList(ScheduleGroup.java:205)
+	at repast.simphony.engine.schedule.ScheduleGroup.execute(ScheduleGroup.java:231)
+	at repast.simphony.engine.schedule.Schedule.execute(Schedule.java:352)
+	at repast.simphony.ui.GUIScheduleRunner$ScheduleLoopRunnable.run(GUIScheduleRunner.java:52)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.reflect.InvocationTargetException
+	at cps2Project.SensorAgent$$FastClassByCGLIB$$9eb3e90a.invoke(<generated>)
+	at net.sf.cglib.reflect.FastMethod.invoke(FastMethod.java:53)
+	at repast.simphony.engine.schedule.CallBackAction.execute(CallBackAction.java:127)
+	... 18 more
+Caused by: java.lang.NullPointerException
+	at cps2Project.SensorAgent.vote(SensorAgent.java:105)
+	... 21 more
+FATAL [Thread-5] 2017-01-15 14:50:52,809 repast.simphony.ui.GUIScheduleRunner - RunTimeException when running the schedule
+Current tick (20.0)
+java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at repast.simphony.engine.schedule.DynamicTargetAction.execute(DynamicTargetAction.java:72)
+	at repast.simphony.engine.controller.ScheduledMethodControllerAction$ScheduleMethodAllAction.execute(ScheduledMethodControllerAction.java:333)
+	at repast.simphony.engine.schedule.DefaultAction.execute(DefaultAction.java:38)
+	at repast.simphony.engine.schedule.ScheduleGroup.executeList(ScheduleGroup.java:205)
+	at repast.simphony.engine.schedule.ScheduleGroup.execute(ScheduleGroup.java:231)
+	at repast.simphony.engine.schedule.Schedule.execute(Schedule.java:352)
+	at repast.simphony.ui.GUIScheduleRunner$ScheduleLoopRunnable.run(GUIScheduleRunner.java:52)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.reflect.InvocationTargetException
+	at cps2Project.Agent$$FastClassByCGLIB$$fdae4be4.invoke(<generated>)
+	at net.sf.cglib.reflect.FastMethod.invoke(FastMethod.java:53)
+	at repast.simphony.engine.schedule.DynamicTargetAction.execute(DynamicTargetAction.java:69)
+	... 7 more
+Caused by: java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at repast.simphony.engine.schedule.CallBackAction.execute(CallBackAction.java:129)
+	at repast.simphony.engine.watcher.ArgMatcher$SetWatcheeTrigger.execute(ArgMatcher.java:47)
+	at repast.simphony.engine.watcher.ImmediateExecutor.scheduleExecution(ImmediateExecutor.java:31)
+	at repast.simphony.engine.watcher.Notifier2.triggered(Notifier2.java:150)
+	at repast.simphony.engine.watcher.WatcherTrigger.notify(WatcherTrigger.java:116)
+	at repast.simphony.engine.watcher.WatcherTrigger.triggered(WatcherTrigger.java:146)
+	at cps2Project.SensorAgent.startVote(SensorAgent.java:161)
+	at cps2Project.SensorAgent.compute(SensorAgent.java:66)
+	... 10 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at cps2Project.SensorAgent$$FastClassByCGLIB$$9eb3e90a.invoke(<generated>)
+	at net.sf.cglib.reflect.FastMethod.invoke(FastMethod.java:53)
+	at repast.simphony.engine.schedule.CallBackAction.execute(CallBackAction.java:127)
+	... 17 more
+Caused by: java.lang.NullPointerException
+	at cps2Project.SensorAgent.vote(SensorAgent.java:105)
+	... 20 more

@@ -14,6 +14,7 @@ public class SensorAgent extends Agent{
 	protected int nbSensor;
 	protected int voteResult; //0 if no vote result, 1 if true, -1 if false
 	protected ArrayList<Boolean> voteList;
+	protected ArrayList<Integer> voterIDList;
 	protected boolean increaseDownHoleActu; //will convey the command for the downhole actuator agent to increase power
 	protected boolean voting;
 	protected boolean voteFinished;
@@ -32,6 +33,10 @@ public class SensorAgent extends Agent{
 
 	public ArrayList<Boolean> getVoteList() {
 		return voteList;
+	}
+
+	public ArrayList<Integer> getVoterIDList() {
+		return voterIDList;
 	}
 
 	public int getVoteResult() {
@@ -86,16 +91,21 @@ public class SensorAgent extends Agent{
 		{ //if we receive a voting request
 			voteResult=0; //we forget the previous vote result
 			ArrayList<Boolean> receivedVoteList = sensorAgent.getVoteList(); //we get the list
+			ArrayList<Integer> receivedVoterIDList = sensorAgent.getVoterIDList(); //we get the list
 			voteList = receivedVoteList;
+			voterIDList = receivedVoterIDList;
 			//we check if it is filled
-			if (voteList.size()!=nbSensor)//if it isn't, we update the vote
+			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't and we haven't already voted, we update the vote
 			{
 				//TODO: decide the vote of the agent
 //				boolean vote = true; //for now it will be true
 				boolean vote = (Math.random() < 0.5); //random vote
-				System.out.println(voteList.toString());
+				
 				voteList.add(vote);
+				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
+				System.out.println(voteList.toString());
+				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
 			else //else, we extract the result
@@ -148,6 +158,7 @@ public class SensorAgent extends Agent{
 	public void startVote() //when we start a vote, we create a new ArrayList of boolean that we fill with nulls
 	{
 		voteList = new ArrayList<Boolean>();
+		voterIDList = new ArrayList<Integer>();
 		voting = !voting;
 	}
 
