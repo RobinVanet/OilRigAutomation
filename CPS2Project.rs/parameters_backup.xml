@@ -6,10 +6,28 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="surfaceTemp" displayName="Surface Temperature (in degree Celsius)" type="float" 
+						defaultValue="20.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
+				<parameter name="drillingSpeed" displayName="Initial drilling speed (in m/min)" type="float" 
+						defaultValue="2.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
 				<parameter name="nbSensor" displayName="number of Sensor Agents" type="int" 
 						defaultValue="5" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="drillingAngle" displayName="Drilling Angle" type="float" 
+						defaultValue="30.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 				<parameter name="nbActuator" displayName="number of uphole Actuator Agents" type="int" 

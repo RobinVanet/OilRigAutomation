@@ -8,6 +8,9 @@ import repast.simphony.engine.environment.RunEnvironment;
 public class ContextCreator implements ContextBuilder<Agent> {
 	
 	float drillingAngle;
+	float drillingSpeed;
+	float surfaceTemp;
+	float geotermalGradient;
 
 	protected Context<Agent> context;
 
@@ -20,6 +23,9 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		int nbSensor = RunEnvironment.getInstance().getParameters().getInteger("nbSensor");
 		int nbActuator = RunEnvironment.getInstance().getParameters().getInteger("nbActuator");
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
+		drillingSpeed = RunEnvironment.getInstance().getParameters().getFloat("drillingSpeed");
+		surfaceTemp = RunEnvironment.getInstance().getParameters().getFloat("surfaceTemp");
+		geotermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geotermalGradient");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -63,9 +69,23 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	{
 		double trueDepth = 0;
 		double angle = ((this.drillingAngle)/180)*3.14159;
-		trueDepth = measuredDepth * Math.cos(angle) ;//* (57.3);
-		System.out.println(Math.cos(angle));
+		trueDepth = measuredDepth * Math.cos(angle) ;
 		return trueDepth;
+	}
+
+	public float getDrillingSpeed() {
+		return drillingSpeed;
+	}
+
+	public void setDrillingSpeed(float drillingSpeed) {
+		this.drillingSpeed = drillingSpeed;
+	}
+	
+	public double getTemperatureFromTVD(double trueDepth)
+	{
+		double temperature = 0;
+		temperature = surfaceTemp + (geotermalGradient * trueDepth);
+		return temperature;
 	}
 
 }

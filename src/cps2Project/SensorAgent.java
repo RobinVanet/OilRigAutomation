@@ -65,14 +65,6 @@ public class SensorAgent extends Agent{
 		//System.out.println("Agent "+ getIDSensorAgent()+" is breathing!");
 		//temperature = Math.random()*130;
 		temperature++;
-		if (IDSensorAgent==4 && temperature%10==0) //every 10 ticks, new vote
-		{
-			System.out.println("Starting a vote");
-			startVote();			
-		}
-			
-		if (IDSensorAgent ==4 && voteResult!=0)
-			System.out.println("Vote result = "+voteResult);
 		if (temperature<100)
 		{
 			//do nothing
@@ -88,9 +80,14 @@ public class SensorAgent extends Agent{
 			//TODO:in the case the downhole actuator is already at full power, someone has to send the message to the field agent : but SensorAgent or ActuatorAgent? AA seems more logic (no tracking from SA, if in the AA)
 		}
 		
+		
+		float speed = context.getDrillingSpeed();
+		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
-		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
+//		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
+		double temperature = context.getTemperatureFromTVD(trueDepth);
 		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
+		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
 		
 		
 		
