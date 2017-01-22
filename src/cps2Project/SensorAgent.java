@@ -7,28 +7,27 @@ import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
 public class SensorAgent extends Agent{
 	
-	protected double temperature;
+	//informations on the sensor itself
 	protected int IDSensorAgent;
 	protected int neighborUp;
 	protected int neighborDown;
+	protected ContextCreator context;
+	protected double dangerTemp;
+	protected double criticalTemp;
+	protected double shutdownTemp;
+	
+	//voting mechanisms variables
 	protected int nbSensor;
 	protected int voteResult; //0 if no vote result, 1 if true, -1 if false
 	protected ArrayList<Boolean> voteList;
 	protected ArrayList<Integer> voterIDList;
-	protected boolean increaseDownHoleActu; //will convey the command for the downhole actuator agent to increase power
 	protected boolean voting;
 	protected boolean voteFinished;
-	protected double measuredDepth; 
-	protected double trueDepth;
-	protected ContextCreator context;
 	
-	public double getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(double temperature) {
-		this.temperature = temperature;
-	}
+	//measures
+	protected double measuredDepth; 
+	protected double trueDepth;	
+	protected double temperature;
 
 	public int getIDSensorAgent() {
 		return IDSensorAgent;
@@ -46,46 +45,44 @@ public class SensorAgent extends Agent{
 		return voteResult;
 	}
 
-	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth) {
+	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp) {
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
 		this.neighborDown = neighborDown;
-		this.temperature = 0;
-		this.increaseDownHoleActu = false;
 		this.voting = false;
 		this.voteResult = 0;
 		this.nbSensor = nbSensor;
 		this.context = context;
 		this.measuredDepth = measuredDepth;
+		this.dangerTemp = dangerTemp;
+		this.criticalTemp = criticalTemp;
+		this.shutdownTemp = shutdownTemp;
 	}
 
 	@Override
 	public void compute() {
-		// TODO Auto-generated method stub
-		//System.out.println("Agent "+ getIDSensorAgent()+" is breathing!");
-		//temperature = Math.random()*130;
-		temperature++;
-		if (temperature<100)
-		{
-			//do nothing
-		}
-		else if(temperature<125)
-		{
-			//inform the field Agent
-			//maybe use a @watch?
-		}
-		else
-		{
-			//take direct action, inform field agent
-			//TODO:in the case the downhole actuator is already at full power, someone has to send the message to the field agent : but SensorAgent or ActuatorAgent? AA seems more logic (no tracking from SA, if in the AA)
-		}
+//		temperature++;
+//		if (temperature<100)
+//		{
+//			//do nothing
+//		}
+//		else if(temperature<125)
+//		{
+//			//inform the field Agent
+//			//maybe use a @watch?
+//		}
+//		else
+//		{
+//			//take direct action, inform field agent
+//			//TODO:in the case the downhole actuator is already at full power, someone has to send the message to the field agent : but SensorAgent or ActuatorAgent? AA seems more logic (no tracking from SA, if in the AA)
+//		}
 		
 		
 		float speed = context.getDrillingSpeed();
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
+		temperature = context.getTemperatureFromTVD(trueDepth);
 //		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
-		double temperature = context.getTemperatureFromTVD(trueDepth);
 		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
 		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
 		
