@@ -2,6 +2,7 @@ package cps2Project;
 
 import java.util.ArrayList;
 
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
@@ -23,6 +24,7 @@ public class SensorAgent extends Agent{
 	protected ArrayList<Integer> voterIDList;
 	protected boolean voting;
 	protected boolean voteFinished;
+	protected int nextVoteCountdown; //will be used to avoid a vote spam
 	
 	//measures
 	protected double measuredDepth; 
@@ -57,35 +59,41 @@ public class SensorAgent extends Agent{
 		this.dangerTemp = dangerTemp;
 		this.criticalTemp = criticalTemp;
 		this.shutdownTemp = shutdownTemp;
+		this.nextVoteCountdown = 0;
 	}
 
 	@Override
 	public void compute() {
-//		temperature++;
-//		if (temperature<100)
-//		{
-//			//do nothing
-//		}
-//		else if(temperature<125)
-//		{
-//			//inform the field Agent
-//			//maybe use a @watch?
-//		}
-//		else
-//		{
-//			//take direct action, inform field agent
-//			//TODO:in the case the downhole actuator is already at full power, someone has to send the message to the field agent : but SensorAgent or ActuatorAgent? AA seems more logic (no tracking from SA, if in the AA)
-//		}
 		
-		
+		if (nextVoteCountdown > 0)
+			nextVoteCountdown--;
 		float speed = context.getDrillingSpeed();
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
 //		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
-		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
+//		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
 		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
 		
+		if (temperature >= shutdownTemp)
+		{
+			//end the simulation
+			System.out.println("Failure! Agent #"+IDSensorAgent+" overheated.");
+			RunEnvironment.getInstance().endRun();
+		}
+		else if (temperature >= criticalTemp)
+		{
+			if (nextVoteCountdown == 0)
+			{
+				System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
+				startVote();				
+				nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
+			}
+		}
+		else if (temperature >= dangerTemp)
+		{
+			//TODO: send a message to the FA
+		}
 		
 		
 	}
@@ -103,9 +111,11 @@ public class SensorAgent extends Agent{
 			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't finished and we haven't already voted, we update the vote
 			{
 				//TODO: decide the vote of the agent
-//				boolean vote = true; //for now it will be true
-				boolean vote = (Math.random() < 0.5); //random vote
-				
+				boolean vote;
+				if (temperature>=criticalTemp)
+					vote = true;
+				else
+					vote = false;
 				voteList.add(vote);
 				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
@@ -113,7 +123,7 @@ public class SensorAgent extends Agent{
 				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
-			else //else, we extract the result
+			else if (voteList.size()==nbSensor)//if everybody voted, we extract the result
 			{
 				int trueVotes = 0;
 				int falseVotes = 0;
@@ -126,15 +136,21 @@ public class SensorAgent extends Agent{
 				}
 				if (trueVotes>falseVotes)
 				{
+					System.out.println("Vote result is true");
 					voteResult = 1;
 					voteFinished = !voteFinished;
 				}
 				else
 				{
+					System.out.println("Vote result is false");
 					voteResult = -1;
 					voteFinished = !voteFinished;
 				}//we tell the results to the neighbors
-			}					
+			}
+			else //else some people still need to vote, so we pass the list along
+			{
+				voting = !voting;
+			}
 		}
 	}
 	
