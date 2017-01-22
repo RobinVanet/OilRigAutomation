@@ -12,6 +12,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="drillingAngle" displayName="Drilling Angle" type="float" 
+						defaultValue="30.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
 				<parameter name="nbActuator" displayName="number of uphole Actuator Agents" type="int" 
 						defaultValue="1" 
 						isReadOnly="false" 

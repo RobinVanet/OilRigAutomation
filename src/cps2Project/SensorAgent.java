@@ -18,6 +18,9 @@ public class SensorAgent extends Agent{
 	protected boolean increaseDownHoleActu; //will convey the command for the downhole actuator agent to increase power
 	protected boolean voting;
 	protected boolean voteFinished;
+	protected double measuredDepth; 
+	protected double trueDepth;
+	protected ContextCreator context;
 	
 	public double getTemperature() {
 		return temperature;
@@ -43,7 +46,7 @@ public class SensorAgent extends Agent{
 		return voteResult;
 	}
 
-	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor) {
+	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth) {
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
 		this.neighborDown = neighborDown;
@@ -52,6 +55,8 @@ public class SensorAgent extends Agent{
 		this.voting = false;
 		this.voteResult = 0;
 		this.nbSensor = nbSensor;
+		this.context = context;
+		this.measuredDepth = measuredDepth;
 	}
 
 	@Override
@@ -60,13 +65,13 @@ public class SensorAgent extends Agent{
 		//System.out.println("Agent "+ getIDSensorAgent()+" is breathing!");
 		//temperature = Math.random()*130;
 		temperature++;
-		if (IDSensorAgent==2 && temperature%10==0) //every 10 ticks, new vote
+		if (IDSensorAgent==4 && temperature%10==0) //every 10 ticks, new vote
 		{
 			System.out.println("Starting a vote");
 			startVote();			
 		}
 			
-		if (IDSensorAgent ==2 && voteResult!=0)
+		if (IDSensorAgent ==4 && voteResult!=0)
 			System.out.println("Vote result = "+voteResult);
 		if (temperature<100)
 		{
@@ -83,6 +88,12 @@ public class SensorAgent extends Agent{
 			//TODO:in the case the downhole actuator is already at full power, someone has to send the message to the field agent : but SensorAgent or ActuatorAgent? AA seems more logic (no tracking from SA, if in the AA)
 		}
 		
+		trueDepth = context.getTrueDepth(measuredDepth);
+		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
+		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
+		
+		
+		
 	}
 	
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voting", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
@@ -95,7 +106,7 @@ public class SensorAgent extends Agent{
 			voteList = receivedVoteList;
 			voterIDList = receivedVoterIDList;
 			//we check if it is filled
-			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't and we haven't already voted, we update the vote
+			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't finished and we haven't already voted, we update the vote
 			{
 				//TODO: decide the vote of the agent
 //				boolean vote = true; //for now it will be true

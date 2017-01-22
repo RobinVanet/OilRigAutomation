@@ -6,6 +6,8 @@ import repast.simphony.engine.environment.RunEnvironment;
 
 
 public class ContextCreator implements ContextBuilder<Agent> {
+	
+	float drillingAngle;
 
 	protected Context<Agent> context;
 
@@ -17,6 +19,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		//TODO: add all the variables mentioned in the second Meeting Report
 		int nbSensor = RunEnvironment.getInstance().getParameters().getInteger("nbSensor");
 		int nbActuator = RunEnvironment.getInstance().getParameters().getInteger("nbActuator");
+		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -33,7 +36,8 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		/*--------------CREATING THE SENSOR AGENTS-----------------*/
 		for (int i = 0;i<nbSensor;i++)
 		{
-			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor);
+			double startingMeasuredDepth = 70 - (10*i);
+			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth);
 			context.add(sa);
 			nextID++;
 		}
@@ -53,6 +57,15 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		}
 		
 		return context;
+	}
+	
+	public double getTrueDepth(double measuredDepth)
+	{
+		double trueDepth = 0;
+		double angle = ((this.drillingAngle)/180)*3.14159;
+		trueDepth = measuredDepth * Math.cos(angle) ;//* (57.3);
+		System.out.println(Math.cos(angle));
+		return trueDepth;
 	}
 
 }

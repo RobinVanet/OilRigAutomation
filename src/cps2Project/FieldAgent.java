@@ -1,7 +1,5 @@
 package cps2Project;
 
-import repast.simphony.engine.watcher.Watch;
-import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
 public class FieldAgent extends Agent{
 	
