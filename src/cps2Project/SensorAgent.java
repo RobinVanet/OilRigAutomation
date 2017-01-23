@@ -25,6 +25,7 @@ public class SensorAgent extends Agent{
 	protected boolean voting;
 	protected boolean voteFinished;
 	protected int nextVoteCountdown; //will be used to avoid a vote spam
+	protected boolean actionAlreadyTaken;
 	
 	//measures
 	protected double measuredDepth; 
@@ -64,16 +65,16 @@ public class SensorAgent extends Agent{
 
 	@Override
 	public void compute() {
-		
+		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
 		if (nextVoteCountdown > 0)
 			nextVoteCountdown--;
-		float speed = context.getDrillingSpeed();
+		double speed = context.getDrillingSpeed();
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
 //		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
 //		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
-		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
+//		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
 		
 		if (temperature >= shutdownTemp)
 		{
@@ -85,7 +86,7 @@ public class SensorAgent extends Agent{
 		{
 			if (nextVoteCountdown == 0)
 			{
-				System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
+//				System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
 				startVote();				
 				nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
 			}
@@ -103,10 +104,8 @@ public class SensorAgent extends Agent{
 		if (validSender(sensorAgent.getIDSensorAgent()))
 		{ //if we receive a voting request
 			voteResult=0; //we forget the previous vote result
-			ArrayList<Boolean> receivedVoteList = sensorAgent.getVoteList(); //we get the list
-			ArrayList<Integer> receivedVoterIDList = sensorAgent.getVoterIDList(); //we get the list
-			voteList = receivedVoteList;
-			voterIDList = receivedVoterIDList;
+			voteList = sensorAgent.getVoteList(); //we get the list
+			voterIDList = sensorAgent.getVoterIDList(); //we get the list
 			//we check if it is filled
 			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't finished and we haven't already voted, we update the vote
 			{
@@ -119,45 +118,48 @@ public class SensorAgent extends Agent{
 				voteList.add(vote);
 				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
-				System.out.println(voteList.toString());
-				System.out.println(voterIDList.toString());
+//				System.out.println(voteList.toString());
+//				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
 			else if (voteList.size()==nbSensor)//if everybody voted, we extract the result
 			{
-				int trueVotes = 0;
-				int falseVotes = 0;
-				for (int i = 0; i< voteList.size();i++) //we count all the votes
-				{
-					if (voteList.get(i)==true)
-						trueVotes++;
-					else
-						falseVotes++;
-				}
-				if (trueVotes>falseVotes)
-				{
-					System.out.println("Vote result is true");
-					voteResult = 1;
-					voteFinished = !voteFinished;
-				}
-				else
-				{
-					System.out.println("Vote result is false");
-					voteResult = -1;
-					voteFinished = !voteFinished;
-				}//we tell the results to the neighbors
+				extractVoteResult();
 			}
 			else //else some people still need to vote, so we pass the list along
 			{
-				voting = !voting;
+//				voting = !voting;
 			}
 		}
+	}
+	
+	public void extractVoteResult(){
+		int trueVotes = 0;
+		int falseVotes = 0;
+		for (int i = 0; i< voteList.size();i++) //we count all the votes
+		{
+			if (voteList.get(i)==true)
+				trueVotes++;
+			else
+				falseVotes++;
+		}
+		if (trueVotes>falseVotes)
+		{
+			voteResult = 1;
+			voteFinished = !voteFinished;
+		}
+		else
+		{
+			voteResult = -1;
+			voteFinished = !voteFinished;
+		}//we tell the results to the neighbors
 	}
 	
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voteFinished", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void getVoteResult(SensorAgent sensorAgent) {
 		if (validSender(sensorAgent.getIDSensorAgent()))
 		{ //if we receive a valid answer from a neighbor
+//			System.out.println("Agent " + IDSensorAgent+ " received the result "+sensorAgent.getVoteResult()+" from Agent"+sensorAgent.getIDSensorAgent());
 			int vote = sensorAgent.getVoteResult();
 			if (vote != voteResult) //if we didn't already have the vote result
 			{
@@ -182,5 +184,17 @@ public class SensorAgent extends Agent{
 		voterIDList = new ArrayList<Integer>();
 		voting = !voting;
 	}
+	
+	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voteResult", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void actionTaken(SensorAgent sensorAgent) {
+		if (sensorAgent.getIDSensorAgent() == IDSensorAgent && IDSensorAgent == 2 && voteResult ==1 && actionAlreadyTaken == false)
+		{ //when the most downhole SensorAgent realise the vote is a yes
+			actionAlreadyTaken = true;
+//			System.out.println("Vote said : action taken!");
+//			RunEnvironment.getInstance().endRun();
+			context.lowerDrillingSpeed();
+		}
+	}
+	
 
 }

@@ -8,7 +8,7 @@ import repast.simphony.engine.environment.RunEnvironment;
 public class ContextCreator implements ContextBuilder<Agent> {
 	
 	float drillingAngle;
-	float drillingSpeed;
+	double drillingSpeed;
 	float surfaceTemp;
 	float geotermalGradient;
 
@@ -76,11 +76,11 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return trueDepth;
 	}
 
-	public float getDrillingSpeed() {
+	public double getDrillingSpeed() {
 		return drillingSpeed;
 	}
 
-	public void setDrillingSpeed(float drillingSpeed) {
+	public void setDrillingSpeed(double drillingSpeed) {
 		this.drillingSpeed = drillingSpeed;
 	}
 	
@@ -89,6 +89,12 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double temperature = 0;
 		temperature = surfaceTemp + (geotermalGradient * trueDepth);
 		return temperature;
+	}
+	
+	public void lowerDrillingSpeed()
+	{
+		drillingSpeed = (drillingSpeed * 0.90);
+		System.out.println("New drilling speed is " + drillingSpeed + "m/min");
 	}
 
 }
