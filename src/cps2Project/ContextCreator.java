@@ -11,6 +11,8 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	double drillingSpeed;
 	float surfaceTemp;
 	float geothermalGradient;
+	double coolDown = 0; //the cooling down taking place, starts at no cooling down 
+	int depthGoal;
 
 	protected Context<Agent> context;
 
@@ -26,6 +28,8 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		drillingSpeed = RunEnvironment.getInstance().getParameters().getFloat("drillingSpeed");
 		surfaceTemp = RunEnvironment.getInstance().getParameters().getFloat("surfaceTemp");
 		geothermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geothermalGradient");
+		double actuatorEffectiveness = RunEnvironment.getInstance().getParameters().getDouble("actuatorEffectiveness");
+		depthGoal = RunEnvironment.getInstance().getParameters().getInteger("depthGoal");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -35,7 +39,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		//4) the uphole actuators
 		
 		/*--------------CREATING THE DOWNHOLE ACTUATOR-----------------*/
-		ActuatorAgent aa = new ActuatorAgent(nextID,true,nextID+1);
+		ActuatorAgent aa = new ActuatorAgent(nextID,true,nextID+1,this,1);
 		nextID++;
 		context.add(aa);
 		
@@ -68,7 +72,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		for (int i = 0;i<nbActuator;i++)
 		{
 			int IDFA = fa.getIDFieldAgent(); //get the ID of the Field Agent
-			aa = new ActuatorAgent(nextID,false,IDFA);
+			aa = new ActuatorAgent(nextID,false,IDFA,this,actuatorEffectiveness);
 			context.add(aa);
 			nextID++;
 		}
@@ -81,6 +85,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double trueDepth = 0;
 		double angle = ((this.drillingAngle)/180)*3.14159;
 		trueDepth = measuredDepth * Math.cos(angle) ;
+		checkDepthReached(trueDepth);
 		return trueDepth;
 	}
 
@@ -96,6 +101,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	{
 		double temperature = 0;
 		temperature = surfaceTemp + (geothermalGradient * trueDepth);
+		temperature = temperature - coolDown;
 		return temperature;
 	}
 	
@@ -103,6 +109,28 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	{
 		drillingSpeed = (drillingSpeed * 0.90);
 		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
+	}
+	
+	public void increaseDrillingSpeed()
+	{
+		System.out.println("Taking up speed!");
+		drillingSpeed = (drillingSpeed * 1.111111111); //the opposite of slowing down
+//		RunEnvironment.getInstance().pauseRun();
+	}
+	
+	public void coolDown(double cooling)
+	{
+		coolDown += cooling;
+	}
+	
+	public void checkDepthReached (double depth)
+	{
+		if (depth>=depthGoal)
+		{
+			double ticks = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+			System.out.println("Depth goal reached in " + ticks + " minutes");
+			RunEnvironment.getInstance().endRun();
+		}
 	}
 
 }

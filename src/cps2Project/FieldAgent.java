@@ -8,6 +8,13 @@ public class FieldAgent extends Agent{
 	protected int IDFieldAgent;
 	protected int IDUpperSensorAgent;
 	
+	protected int accelerateCounter = 0;
+	protected boolean speedDrill = false;
+	protected int nextSpeedDrillMessage = -1;
+	
+	//messages to the AA
+	protected boolean coolDown = false;
+	
 	public int getIDFieldAgent() {
 		return IDFieldAgent;
 	}
@@ -19,14 +26,43 @@ public class FieldAgent extends Agent{
 	
 	@Override
 	public void compute() {
-		// TODO Auto-generated method stub
-//		System.out.println("FA #" + IDFieldAgent + " is on and waiting");
+		accelerateCounter++;
+		if (accelerateCounter == 120)
+		{
+			speedDrill();
+			accelerateCounter =0;
+		}
+		if (nextSpeedDrillMessage != -1)
+		{
+			if (nextSpeedDrillMessage == 0)
+					speedDrill = !speedDrill;
+			nextSpeedDrillMessage--;
+		}
 	}
 	
 	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "messageFATooHot", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
-	public void messageFATooHot(UpperSensorAgent sensorAgent)
+	public void messageFATooHot(UpperSensorAgent sensorAgent)	
 	{
-		System.out.println("FA detected that the temperature is too hot!");
+//		System.out.println("FA detected that the temperature is too hot!");
+		coolDown();
+		accelerateCounter = 0;
+	}
+	
+	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "messageFASlowDown", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageFASlowDown(UpperSensorAgent sensorAgent)
+	{
+		System.out.println("FA learned that the drill was slowed down!");
+//		coolDown();
+	}
+	
+	public void coolDown()
+	{
+		coolDown = !coolDown;
+	}
+	
+	public void speedDrill()
+	{
+		nextSpeedDrillMessage = 60;
 	}
 
 }

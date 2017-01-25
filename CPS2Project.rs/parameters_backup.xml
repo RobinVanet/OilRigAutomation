@@ -12,10 +12,10 @@
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
-				<parameter name="geotermalGradient" displayName="Geotermal Gradient (in Celsius/meter)" type="float" 
-						defaultValue="0.03" 
+				<parameter name="actuatorEffectiveness" displayName="Actuator Effectiveness" type="double" 
+						defaultValue="1.0" 
 						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="drillingSpeed" displayName="Initial drilling speed (in m/min)" type="float" 
@@ -28,6 +28,12 @@
 						defaultValue="5" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="geothermalGradient" displayName="Geothermal Gradient (in Celsius/meter)" type="float" 
+						defaultValue="0.03" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 				<parameter name="drillingAngle" displayName="Drilling Angle" type="float" 

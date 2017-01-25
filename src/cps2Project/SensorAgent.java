@@ -34,6 +34,9 @@ public class SensorAgent extends Agent{
 	
 	//message mechanisms variables
 	protected boolean messageFATooHot = false;
+	protected boolean messageFASlowDown = false;
+	protected boolean speedDrill = false;
+	
 
 	public int getIDSensorAgent() {
 		return IDSensorAgent;
@@ -82,14 +85,14 @@ public class SensorAgent extends Agent{
 		if (temperature >= shutdownTemp)
 		{
 			//end the simulation
-			System.out.println("Failure! Agent #"+IDSensorAgent+" overheated.");
+			System.out.println("Failure! Agent #"+IDSensorAgent+" overheated at "+ trueDepth + "m.");
 			RunEnvironment.getInstance().endRun();
 		}
 		else if (temperature >= criticalTemp)
 		{
 			if (nextVoteCountdown == 0)
 			{
-//				System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
+				//System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
 				startVote();				
 				nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
 			}
@@ -194,6 +197,7 @@ public class SensorAgent extends Agent{
 //			System.out.println("Vote said : action taken!");
 //			RunEnvironment.getInstance().endRun();
 			context.lowerDrillingSpeed();
+			messageFASlowDown = !messageFASlowDown; //we send a message up-hole to notify that the drill was slowed down
 		}
 	}
 	
@@ -206,8 +210,45 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
-//	public void messageFASlowDown()
-//	{
-//
-//	}
+	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "messageFASlowDown", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageFASlowDown(SensorAgent sensorAgent)
+	{
+		if (sensorAgent.getIDSensorAgent() == (IDSensorAgent-1)) //if we receive a message from the SA under
+		{
+			messageFASlowDown = !messageFASlowDown;
+		}
+	}
+	
+	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "speedDrill", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageSASpeedDrill(UpperSensorAgent upperSensorAgent)
+	{
+		if (upperSensorAgent.getIDSensorAgent() == (IDSensorAgent+1)) //if the sender is valid
+		{
+			if (IDSensorAgent == 2) //if we are the most down-hole
+			{
+				context.increaseDrillingSpeed();
+			}
+			else
+			{
+				speedDrill = !speedDrill;
+			}
+		}
+	}
+	
+	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "speedDrill", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageSASpeedDrill(SensorAgent sensorAgent)
+	{
+		if (sensorAgent.getIDSensorAgent() == (IDSensorAgent+1))
+		{
+			if (IDSensorAgent == 2)
+			{
+				context.increaseDrillingSpeed();
+			}
+			else
+			{
+				speedDrill = !speedDrill;
+			}
+		}
+	}
+	
 }
