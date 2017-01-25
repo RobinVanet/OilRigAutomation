@@ -31,6 +31,9 @@ public class SensorAgent extends Agent{
 	protected double measuredDepth; 
 	protected double trueDepth;	
 	protected double temperature;
+	
+	//message mechanisms variables
+	protected boolean messageFATooHot = false;
 
 	public int getIDSensorAgent() {
 		return IDSensorAgent;
@@ -93,10 +96,9 @@ public class SensorAgent extends Agent{
 		}
 		else if (temperature >= dangerTemp)
 		{
-			//TODO: send a message to the FA
+			//send a message to the FA
+			messageFATooHot = !messageFATooHot;
 		}
-		
-		
 	}
 	
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voting", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
@@ -109,7 +111,6 @@ public class SensorAgent extends Agent{
 			//we check if it is filled
 			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't finished and we haven't already voted, we update the vote
 			{
-				//TODO: decide the vote of the agent
 				boolean vote;
 				if (temperature>=criticalTemp)
 					vote = true;
@@ -196,5 +197,17 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
-
+	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "messageFATooHot", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageFATooHot(SensorAgent sensorAgent)
+	{
+		if (sensorAgent.getIDSensorAgent() == (IDSensorAgent-1)) //if we receive a message from the SA under
+		{
+			messageFATooHot = !messageFATooHot;
+		}
+	}
+	
+//	public void messageFASlowDown()
+//	{
+//
+//	}
 }

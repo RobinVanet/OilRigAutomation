@@ -10,7 +10,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	float drillingAngle;
 	double drillingSpeed;
 	float surfaceTemp;
-	float geotermalGradient;
+	float geothermalGradient;
 
 	protected Context<Agent> context;
 
@@ -25,7 +25,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
 		drillingSpeed = RunEnvironment.getInstance().getParameters().getFloat("drillingSpeed");
 		surfaceTemp = RunEnvironment.getInstance().getParameters().getFloat("surfaceTemp");
-		geotermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geotermalGradient");
+		geothermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geothermalGradient");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -40,9 +40,9 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		context.add(aa);
 		
 		/*--------------CREATING THE SENSOR AGENTS-----------------*/
-		for (int i = 0;i<nbSensor;i++)
+		for (int i = 0;i<nbSensor-1;i++)
 		{
-			double startingMeasuredDepth = 70 - (10*i);
+			double startingMeasuredDepth = (nbSensor*10) - (10*i);
 			double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 			double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 			double shutdownTemp = 150; //shutdown at 150°C for everyone
@@ -50,6 +50,14 @@ public class ContextCreator implements ContextBuilder<Agent> {
 			context.add(sa);
 			nextID++;
 		}
+		
+		double startingMeasuredDepth = 0;
+		double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
+		double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
+		double shutdownTemp = 150; //shutdown at 150°C for everyone
+		UpperSensorAgent sa =  new UpperSensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp);
+		context.add(sa);
+		nextID++;
 		
 		/*--------------CREATING THE FIELD AGENT-----------------*/
 		FieldAgent fa = new FieldAgent(nextID,nextID-1);
@@ -87,14 +95,14 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	public double getTemperatureFromTVD(double trueDepth)
 	{
 		double temperature = 0;
-		temperature = surfaceTemp + (geotermalGradient * trueDepth);
+		temperature = surfaceTemp + (geothermalGradient * trueDepth);
 		return temperature;
 	}
 	
 	public void lowerDrillingSpeed()
 	{
 		drillingSpeed = (drillingSpeed * 0.90);
-		System.out.println("New drilling speed is " + drillingSpeed + "m/min");
+		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
 	}
 
 }

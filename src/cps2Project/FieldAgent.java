@@ -1,5 +1,7 @@
 package cps2Project;
 
+import repast.simphony.engine.watcher.Watch;
+import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
 public class FieldAgent extends Agent{
 	
@@ -19,6 +21,12 @@ public class FieldAgent extends Agent{
 	public void compute() {
 		// TODO Auto-generated method stub
 //		System.out.println("FA #" + IDFieldAgent + " is on and waiting");
+	}
+	
+	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "messageFATooHot", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+	public void messageFATooHot(UpperSensorAgent sensorAgent)
+	{
+		System.out.println("FA detected that the temperature is too hot!");
 	}
 
 }

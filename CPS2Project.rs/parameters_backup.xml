@@ -12,6 +12,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
+				<parameter name="geotermalGradient" displayName="Geotermal Gradient (in Celsius/meter)" type="float" 
+						defaultValue="0.03" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
 				<parameter name="drillingSpeed" displayName="Initial drilling speed (in m/min)" type="float" 
 						defaultValue="2.0" 
 						isReadOnly="false" 
