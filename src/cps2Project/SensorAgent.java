@@ -87,7 +87,8 @@ public class SensorAgent extends Agent{
 		if (temperature >= shutdownTemp)
 		{
 			//end the simulation
-			System.out.println("Failure! Agent #"+IDSensorAgent+" overheated at "+ trueDepth + "m.");
+			double ticks = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+			System.out.println("Failure! Agent #"+IDSensorAgent+" overheated at "+ trueDepth + "m in "+ticks+" minutes.");
 			RunEnvironment.getInstance().endRun();
 		}
 		else if (temperature >= criticalTemp)
@@ -113,7 +114,6 @@ public class SensorAgent extends Agent{
 	public void vote(SensorAgent sensorAgent) {
 		if (validSender(sensorAgent.getIDSensorAgent()))
 		{ //if we receive a voting request
-			System.out.println("Vote received");
 			voteResult=0; //we forget the previous vote result
 			voteList = sensorAgent.getVoteList(); //we get the list
 			voterIDList = sensorAgent.getVoterIDList(); //we get the list
@@ -128,8 +128,8 @@ public class SensorAgent extends Agent{
 				voteList.add(vote);
 				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
-				System.out.println(voteList.toString());
-				System.out.println(voterIDList.toString());
+//				System.out.println(voteList.toString());
+//				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
 			else if (voteList.size()==nbSensor)//if everybody voted, we extract the result

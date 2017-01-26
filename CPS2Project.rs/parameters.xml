@@ -13,7 +13,7 @@
 									
 		/>
 				<parameter name="actuatorEffectiveness" displayName="Actuator Effectiveness" type="double" 
-						defaultValue="1.0" 
+						defaultValue="2.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
@@ -34,6 +34,12 @@
 						defaultValue="5" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="coolingEnabled" displayName="Enabling cooling" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
 		/>
 				<parameter name="geothermalGradient" displayName="Geothermal Gradient (in Celsius/meter)" type="float" 

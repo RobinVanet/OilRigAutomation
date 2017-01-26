@@ -31,6 +31,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double actuatorEffectiveness = RunEnvironment.getInstance().getParameters().getDouble("actuatorEffectiveness");
 		depthGoal = RunEnvironment.getInstance().getParameters().getInteger("depthGoal");
 		boolean voteEnabled = RunEnvironment.getInstance().getParameters().getBoolean("voteEnabled");
+		boolean coolingEnabled = RunEnvironment.getInstance().getParameters().getBoolean("coolingEnabled");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -65,7 +66,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		nextID++;
 		
 		/*--------------CREATING THE FIELD AGENT-----------------*/
-		FieldAgent fa = new FieldAgent(nextID,nextID-1);
+		FieldAgent fa = new FieldAgent(nextID,nextID-1,coolingEnabled);
 		nextID++;
 		context.add(fa);
 		
@@ -108,14 +109,14 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	
 	public void lowerDrillingSpeed()
 	{
-		double previousDrillingSpeed = drillingSpeed;
+//		double previousDrillingSpeed = drillingSpeed;
 	
 		drillingSpeed = (drillingSpeed * 0.90);
 		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
 		if (drillingSpeed <= .01)
 				drillingSpeed = .01;
 		
-		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
+//		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
 		//RunEnvironment.getInstance().pauseRun();
 	}
 	

@@ -1,6 +1,5 @@
 package cps2Project;
 
-import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
@@ -8,6 +7,7 @@ public class FieldAgent extends Agent{
 	
 	protected int IDFieldAgent;
 	protected int IDUpperSensorAgent;
+	protected boolean coolingEnabled;
 	
 	protected int accelerateCounter = 0;
 	protected boolean speedDrill = false;
@@ -20,9 +20,10 @@ public class FieldAgent extends Agent{
 		return IDFieldAgent;
 	}
 
-	public FieldAgent(int IDFieldAgent, int IDUpperSensorAgent) {
+	public FieldAgent(int IDFieldAgent, int IDUpperSensorAgent, boolean coolingEnabled) {
 		this.IDFieldAgent = IDFieldAgent;
 		this.IDUpperSensorAgent = IDUpperSensorAgent;
+		this.coolingEnabled = coolingEnabled;
 	}
 	
 	@Override
@@ -59,7 +60,10 @@ public class FieldAgent extends Agent{
 	public void coolDown()
 	{
 		//TODO: comment/uncomment this to remove the cooling down
-//		coolDown = !coolDown;
+		if (coolingEnabled)
+		{
+			coolDown = !coolDown;
+		}	
 //		System.out.println("Request for cooling.");
 //		RunEnvironment.getInstance().pauseRun();
 	}
