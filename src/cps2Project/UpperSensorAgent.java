@@ -17,9 +17,9 @@ public class UpperSensorAgent extends SensorAgent{
 	
 
 	public UpperSensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context,
-			double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp) {
+			double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp,boolean voteEnabled) {
 		super(IDSensorAgent, neighborUp, neighborDown, nbSensor, context, measuredDepth, dangerTemp, criticalTemp,
-				shutdownTemp);
+				shutdownTemp,voteEnabled);
 //		System.out.println("Upper Sensor agent created");
 	}
 	
@@ -44,9 +44,11 @@ public class UpperSensorAgent extends SensorAgent{
 		{
 			if (nextVoteCountdown == 0)
 			{
-//				System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
-				startVote();				
-				nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
+				if (voteEnabled)
+				{
+					startVote();				
+					nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
+				}
 			}
 		}
 		else if (temperature >= dangerTemp)
@@ -87,7 +89,7 @@ public class UpperSensorAgent extends SensorAgent{
 		if ((sensorAgent.getIDSensorAgent() == (IDSensorAgent-1) ||sensorAgent.getIDSensorAgent() == IDSensorAgent) && nextSlowDownMessage == -1) //if we receive a message from the SA or self under and we don't already have a message in the queue
 		{
 //			messageFATooHot = !messageFATooHot;
-			System.out.println("Drill slowed down!");
+//			System.out.println("Drill slowed down!");
 			nextSlowDownMessage = 60;
 //			RunEnvironment.getInstance().pauseRun();
 		}

@@ -54,7 +54,7 @@ public class ActuatorAgent extends Agent{
 			}
 			else
 			{
-				System.out.println("Actuator already at full power!");
+				//System.out.println("Actuator already at full power!");
 			}
 		}
 	}

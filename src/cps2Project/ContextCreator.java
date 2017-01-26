@@ -30,6 +30,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		geothermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geothermalGradient");
 		double actuatorEffectiveness = RunEnvironment.getInstance().getParameters().getDouble("actuatorEffectiveness");
 		depthGoal = RunEnvironment.getInstance().getParameters().getInteger("depthGoal");
+		boolean voteEnabled = RunEnvironment.getInstance().getParameters().getBoolean("voteEnabled");
 		int nextID = 1;
 		
 		//the system is created bottom-up :
@@ -50,7 +51,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 			double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 			double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 			double shutdownTemp = 150; //shutdown at 150°C for everyone
-			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp);
+			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
 			context.add(sa);
 			nextID++;
 		}
@@ -59,7 +60,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 		double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 		double shutdownTemp = 150; //shutdown at 150°C for everyone
-		UpperSensorAgent sa =  new UpperSensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp);
+		UpperSensorAgent sa =  new UpperSensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
 		context.add(sa);
 		nextID++;
 		
@@ -107,13 +108,20 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	
 	public void lowerDrillingSpeed()
 	{
+		double previousDrillingSpeed = drillingSpeed;
+	
 		drillingSpeed = (drillingSpeed * 0.90);
 		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
+		if (drillingSpeed <= .01)
+				drillingSpeed = .01;
+		
+		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
+		//RunEnvironment.getInstance().pauseRun();
 	}
 	
 	public void increaseDrillingSpeed()
 	{
-		System.out.println("Taking up speed!");
+//		System.out.println("Taking up speed!");
 		drillingSpeed = (drillingSpeed * 1.111111111); //the opposite of slowing down
 //		RunEnvironment.getInstance().pauseRun();
 	}

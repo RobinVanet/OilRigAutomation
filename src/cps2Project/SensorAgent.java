@@ -18,6 +18,7 @@ public class SensorAgent extends Agent{
 	protected double shutdownTemp;
 	
 	//voting mechanisms variables
+	protected boolean voteEnabled;
 	protected int nbSensor;
 	protected int voteResult; //0 if no vote result, 1 if true, -1 if false
 	protected ArrayList<Boolean> voteList;
@@ -54,7 +55,7 @@ public class SensorAgent extends Agent{
 		return voteResult;
 	}
 
-	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp) {
+	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
 		this.neighborDown = neighborDown;
@@ -67,6 +68,7 @@ public class SensorAgent extends Agent{
 		this.criticalTemp = criticalTemp;
 		this.shutdownTemp = shutdownTemp;
 		this.nextVoteCountdown = 0;
+		this.voteEnabled = voteEnabled;
 	}
 
 	@Override
@@ -93,8 +95,11 @@ public class SensorAgent extends Agent{
 			if (nextVoteCountdown == 0)
 			{
 				//System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
-				startVote();				
-				nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
+				if (voteEnabled)
+				{
+					startVote();				
+					nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
+				}				
 			}
 		}
 		else if (temperature >= dangerTemp)
@@ -108,6 +113,7 @@ public class SensorAgent extends Agent{
 	public void vote(SensorAgent sensorAgent) {
 		if (validSender(sensorAgent.getIDSensorAgent()))
 		{ //if we receive a voting request
+			System.out.println("Vote received");
 			voteResult=0; //we forget the previous vote result
 			voteList = sensorAgent.getVoteList(); //we get the list
 			voterIDList = sensorAgent.getVoterIDList(); //we get the list
@@ -122,8 +128,8 @@ public class SensorAgent extends Agent{
 				voteList.add(vote);
 				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
-//				System.out.println(voteList.toString());
-//				System.out.println(voterIDList.toString());
+				System.out.println(voteList.toString());
+				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
 			else if (voteList.size()==nbSensor)//if everybody voted, we extract the result

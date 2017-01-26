@@ -1,5 +1,6 @@
 package cps2Project;
 
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
@@ -51,13 +52,16 @@ public class FieldAgent extends Agent{
 	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "messageFASlowDown", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void messageFASlowDown(UpperSensorAgent sensorAgent)
 	{
-		System.out.println("FA learned that the drill was slowed down!");
+//		System.out.println("FA learned that the drill was slowed down!");
 //		coolDown();
 	}
 	
 	public void coolDown()
 	{
-		coolDown = !coolDown;
+		//TODO: comment/uncomment this to remove the cooling down
+//		coolDown = !coolDown;
+//		System.out.println("Request for cooling.");
+//		RunEnvironment.getInstance().pauseRun();
 	}
 	
 	public void speedDrill()
