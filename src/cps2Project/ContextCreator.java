@@ -4,9 +4,16 @@ import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
 
-
+/**
+ * Context creating class. Creates and places all the agents of the simulation.
+ * Also used to get informations/actions on the environment on the Sensor Agents array (get the TVD and temperature, slow down the drill, cooling the equipments).
+ * 
+ * @author Robin Vanet
+ *
+ */
 public class ContextCreator implements ContextBuilder<Agent> {
 	
+	/*--------------VARIABLES-----------------*/
 	float drillingAngle;
 	double drillingSpeed;
 	float surfaceTemp;
@@ -15,13 +22,80 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	int depthGoal;
 
 	protected Context<Agent> context;
+	
+	/*--------------GETTERS AND SETTERS-----------------*/
+	/**
+	 * Get the true depth of an equipment given the angle of drilling and the measured depth
+	 * 
+	 * @param measuredDepth
+	 * @return the true depth linked to the measured depth
+	 */
+	public double getTrueDepth(double measuredDepth)
+	{
+		double trueDepth = 0;
+		double angle = ((this.drillingAngle)/180)*3.14159;
+		trueDepth = measuredDepth * Math.cos(angle) ;
+		checkDepthReached(trueDepth);
+		return trueDepth;
+	}
+
+	
+	public double getDrillingSpeed() {
+		return drillingSpeed;
+	}
+
+	public void setDrillingSpeed(double drillingSpeed) {
+		this.drillingSpeed = drillingSpeed;
+	}
+	
+	/**
+	 * Get the temperature from a TVD with the geothermal gradient, the surface temperature, and the cooling.
+	 * 
+	 * @param trueDepth
+	 * @return the temperature associated to the TVD
+	 */
+	public double getTemperatureFromTVD(double trueDepth)
+	{
+		double temperature = 0;
+		temperature = surfaceTemp + (geothermalGradient * trueDepth);
+		temperature = temperature - coolDown;
+		return temperature;
+	}
+	
+	/**
+	 * Lower the drilling speed 
+	 */
+	public void lowerDrillingSpeed()
+	{
+//		double previousDrillingSpeed = drillingSpeed;
+	
+		drillingSpeed = (drillingSpeed * 0.90);
+		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
+		if (drillingSpeed <= .01)
+				drillingSpeed = .01;
+		
+//		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
+		//RunEnvironment.getInstance().pauseRun();
+	}
+	
+	/**
+	 * Increase the drilling speed
+	 */
+	public void increaseDrillingSpeed()
+	{
+//		System.out.println("Taking up speed!");
+		drillingSpeed = (drillingSpeed * 1.111111111); //the opposite of slowing down
+//		RunEnvironment.getInstance().pauseRun();
+	}
 
 	/*--------------CONSTRUCTOR-----------------*/
+	/**
+	 * Function used to create and place the agents in the simulation.
+	 */
 	@Override
 	public Context<Agent> build(Context<Agent> context) {
 		
 		/*--------------GETTING THE VARIABLES-----------------*/
-		//TODO: add all the variables mentioned in the second Meeting Report
 		int nbSensor = RunEnvironment.getInstance().getParameters().getInteger("nbSensor");
 		int nbActuator = RunEnvironment.getInstance().getParameters().getInteger("nbActuator");
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
@@ -82,56 +156,22 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return context;
 	}
 	
-	public double getTrueDepth(double measuredDepth)
-	{
-		double trueDepth = 0;
-		double angle = ((this.drillingAngle)/180)*3.14159;
-		trueDepth = measuredDepth * Math.cos(angle) ;
-		checkDepthReached(trueDepth);
-		return trueDepth;
-	}
-
-	public double getDrillingSpeed() {
-		return drillingSpeed;
-	}
-
-	public void setDrillingSpeed(double drillingSpeed) {
-		this.drillingSpeed = drillingSpeed;
-	}
-	
-	public double getTemperatureFromTVD(double trueDepth)
-	{
-		double temperature = 0;
-		temperature = surfaceTemp + (geothermalGradient * trueDepth);
-		temperature = temperature - coolDown;
-		return temperature;
-	}
-	
-	public void lowerDrillingSpeed()
-	{
-//		double previousDrillingSpeed = drillingSpeed;
-	
-		drillingSpeed = (drillingSpeed * 0.90);
-		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
-		if (drillingSpeed <= .01)
-				drillingSpeed = .01;
-		
-//		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
-		//RunEnvironment.getInstance().pauseRun();
-	}
-	
-	public void increaseDrillingSpeed()
-	{
-//		System.out.println("Taking up speed!");
-		drillingSpeed = (drillingSpeed * 1.111111111); //the opposite of slowing down
-//		RunEnvironment.getInstance().pauseRun();
-	}
-	
+	/*--------------FUNCTIONS-----------------*/
+	/**
+	 * Increase the cooling of the equipments
+	 * @param cooling : the number of °C the equipments are cooled down.
+	 */
 	public void coolDown(double cooling)
 	{
 		coolDown += cooling;
 	}
 	
+	/**
+	 * Check if we reached the depth goal.
+	 * If it is reached, ends the simulation with a message.
+	 * 
+	 * @param depth : the depth compared to the goal
+	 */
 	public void checkDepthReached (double depth)
 	{
 		if (depth>=depthGoal)

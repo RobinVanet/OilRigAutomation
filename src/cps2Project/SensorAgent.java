@@ -6,8 +6,17 @@ import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
+/**
+ * The class used to represent the sensor array in each equipment (one agent / equipment).
+ * Their goal is the preservation of the equipment through the control of the temperature,
+ * but with the minimal cost in time to drill.
+ * 
+ * @author Robin Vanet
+ *
+ */
 public class SensorAgent extends Agent{
 	
+	/*--------------VARIABLES-----------------*/
 	//informations on the sensor itself
 	protected int IDSensorAgent;
 	protected int neighborUp;
@@ -38,7 +47,7 @@ public class SensorAgent extends Agent{
 	protected boolean messageFASlowDown = false;
 	protected boolean speedDrill = false;
 	
-
+	/*--------------GETTERS AND SETTERS-----------------*/
 	public int getIDSensorAgent() {
 		return IDSensorAgent;
 	}
@@ -55,6 +64,7 @@ public class SensorAgent extends Agent{
 		return voteResult;
 	}
 
+	/*--------------CONSTRUCTOR-----------------*/
 	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
@@ -71,6 +81,10 @@ public class SensorAgent extends Agent{
 		this.voteEnabled = voteEnabled;
 	}
 
+	/*--------------FUNCTIONS-----------------*/
+	/**
+	 * Method used at each tick (as defined in the Agent class)
+	 */
 	@Override
 	public void compute() {
 		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
@@ -80,6 +94,8 @@ public class SensorAgent extends Agent{
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
+		
+		//can be used to display what the agent knows each tick.
 //		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
 //		System.out.println("trueDepth of Agent #" + IDSensorAgent + " is " + trueDepth + " meters downhole");
 //		System.out.println("temperature of Agent #" + IDSensorAgent + " is " + temperature + "°C");
@@ -110,13 +126,21 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
+	/**
+	 * The function used for the voting mechanism.
+	 * Activated every time an agent requests the others to vote (with the "voting" boolean), each other sensors
+	 * check if the asking one is a neighbor, and if he is they either vote is not everyone voted, or extract the result.
+	 * 
+	 * @param sensorAgent : the sensorAgent sending the message. Used to check if the agent is a valid one (if it is a neighbor).
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voting", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void vote(SensorAgent sensorAgent) {
 		if (validSender(sensorAgent.getIDSensorAgent()))
-		{ //if we receive a voting request
+		{ //if we receive a voting request from a valid neighbor
 			voteResult=0; //we forget the previous vote result
-			voteList = sensorAgent.getVoteList(); //we get the list
-			voterIDList = sensorAgent.getVoterIDList(); //we get the list
+			//get the current lists in the memory of the requesting neighbor
+			voteList = sensorAgent.getVoteList();
+			voterIDList = sensorAgent.getVoterIDList();
 			//we check if it is filled
 			if (voteList.size()!=nbSensor && !voterIDList.contains(IDSensorAgent))//if it isn't finished and we haven't already voted, we update the vote
 			{
@@ -128,21 +152,19 @@ public class SensorAgent extends Agent{
 				voteList.add(vote);
 				voterIDList.add(IDSensorAgent);
 				//we pass the vote to the others
-//				System.out.println(voteList.toString());
-//				System.out.println(voterIDList.toString());
 				voting = !voting;
 			}
 			else if (voteList.size()==nbSensor)//if everybody voted, we extract the result
 			{
 				extractVoteResult();
 			}
-			else //else some people still need to vote, so we pass the list along
-			{
-//				voting = !voting;
-			}
 		}
 	}
 	
+	/**
+	 * Extract the result of the vote once the list is full (everyone voted).
+	 * The presence of a veto or not can be set here.
+	 */
 	public void extractVoteResult(){
 		int trueVotes = 0;
 		int falseVotes = 0;
@@ -165,6 +187,11 @@ public class SensorAgent extends Agent{
 		}//we tell the results to the neighbors
 	}
 	
+	/**
+	 * Get the result of a vote from another sensor agent, then passing it after checking if the other agent is a neighbor.
+	 * 
+	 * @param sensorAgent : the sensorAgent sending the message. Used to check if the agent is a valid one (if it is a neighbor).
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voteFinished", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void getVoteResult(SensorAgent sensorAgent) {
 		if (validSender(sensorAgent.getIDSensorAgent()))
@@ -180,6 +207,12 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
+	/**
+	 * Check if the sender of a message is a neighbor.
+	 * 
+	 * @param IDSender : the ID of the sensor agent transmiting the message.
+	 * @return true if the agent is a neighbor, else if it is self or a distant one.
+	 */
 	public boolean validSender(int IDSender) //know if the sender is a neighbor
 	{
 		if (IDSender == neighborUp || IDSender == neighborDown)
@@ -188,6 +221,9 @@ public class SensorAgent extends Agent{
 			return false;
 	}
 	
+	/**
+	 * Clean the internal memory of previous vote to avoid results from another vote to spill in the new one, then requesting the others to vote.
+	 */
 	public void startVote() //when we start a vote, we create a new ArrayList of boolean that we fill with nulls
 	{
 		voteList = new ArrayList<Boolean>();
@@ -195,18 +231,28 @@ public class SensorAgent extends Agent{
 		voting = !voting;
 	}
 	
+	/**
+	 * Every time the field "voteResult" of one Sensor Agent changes, this function activates.
+	 * The if only works if the Sensor Agent is the most downhole (id = 2) in that case, it will detect its own change and will lower the drilling speed.
+	 * 
+	 * @param sensorAgent : the sensorAgent sending the message. Used to check if the agent is a valid one (if it is a neighbor).
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "voteResult", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void actionTaken(SensorAgent sensorAgent) {
 		if (sensorAgent.getIDSensorAgent() == IDSensorAgent && IDSensorAgent == 2 && voteResult ==1 && actionAlreadyTaken == false)
 		{ //when the most downhole SensorAgent realise the vote is a yes
 			actionAlreadyTaken = true;
-//			System.out.println("Vote said : action taken!");
-//			RunEnvironment.getInstance().endRun();
 			context.lowerDrillingSpeed();
 			messageFASlowDown = !messageFASlowDown; //we send a message up-hole to notify that the drill was slowed down
 		}
 	}
 	
+	/**
+	 * Send the message "temperature is getting too hot for one equipment" to everyone, to reach the FA.
+	 * Only the direct upper level will listen and relay the call.
+	 * 
+	 * @param sensorAgent : the sensorAgent sending the message. Used to check if the agent is a valid one (if it is a neighbor).
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "messageFATooHot", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void messageFATooHot(SensorAgent sensorAgent)
 	{
@@ -216,6 +262,12 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
+	/**
+	 * Send the message "the drill was slowed down" to everyone, to reach the FA.
+	 * Only the direct upper level will listen and relay the call.
+	 * 
+	 * @param sensorAgent : the sensorAgent sending the message. Used to check if the agent is a valid one (if it is a neighbor).
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "messageFASlowDown", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void messageFASlowDown(SensorAgent sensorAgent)
 	{
@@ -225,6 +277,12 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
+	/**
+	 * Watch UpperSensorAgent for the order to increase the drilling speed. 
+	 * Only the next sensor in the array will transmit the message, the others will ignore it.
+	 * 
+	 * @param upperSensorAgent
+	 */
 	@Watch(watcheeClassName = "cps2Project.UpperSensorAgent", watcheeFieldNames = "speedDrill", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void messageSASpeedDrill(UpperSensorAgent upperSensorAgent)
 	{
@@ -241,12 +299,18 @@ public class SensorAgent extends Agent{
 		}
 	}
 	
+	/**
+	 * Watch other SensorAgents for the order to increase the drilling speed. 
+	 * Only the next sensor in the array will transmit/use the message, the others will ignore it.
+	 * 
+	 * @param upperSensorAgent
+	 */
 	@Watch(watcheeClassName = "cps2Project.SensorAgent", watcheeFieldNames = "speedDrill", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void messageSASpeedDrill(SensorAgent sensorAgent)
 	{
 		if (sensorAgent.getIDSensorAgent() == (IDSensorAgent+1))
 		{
-			if (IDSensorAgent == 2)
+			if (IDSensorAgent == 2) //if we are at the most down-hole agent
 			{
 				context.increaseDrillingSpeed();
 			}
