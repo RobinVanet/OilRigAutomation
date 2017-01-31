@@ -3,6 +3,7 @@ package cps2Project;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
+import repast.simphony.space.grid.Grid;
 
 /**
  * 
@@ -15,6 +16,8 @@ import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 
 public class UpperSensorAgent extends SensorAgent{
 	
+	
+
 	/*--------------VARIABLES-----------------*/
 	//variables used to send a message to the FA up-hole
 	protected int nextTooHotMessage = -1;
@@ -26,10 +29,11 @@ public class UpperSensorAgent extends SensorAgent{
 	protected boolean speedDrill = false;
 	
 	/*--------------CONSTRUCTOR-----------------*/
-	public UpperSensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context,
-			double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp,boolean voteEnabled) {
-		super(IDSensorAgent, neighborUp, neighborDown, nbSensor, context, measuredDepth, dangerTemp, criticalTemp,
-				shutdownTemp,voteEnabled);
+	public UpperSensorAgent(Grid<Agent> grid, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor,
+			ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp,
+			boolean voteEnabled) {
+		super(grid, IDSensorAgent, neighborUp, neighborDown, nbSensor, context, measuredDepth, dangerTemp, criticalTemp,
+				shutdownTemp, voteEnabled);
 	}
 	
 	/*--------------FUNCTIONS-----------------*/

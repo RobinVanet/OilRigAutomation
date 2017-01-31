@@ -1,6 +1,7 @@
 package cps2Project;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.space.grid.Grid;
 
 /**
  * The class which all agents classes are derived from.
@@ -9,7 +10,10 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * @author Robin Vanet
  *
  */
-public abstract class Agent {/*
+public abstract class Agent {
+
+	/*--------------VARIABLES-----------------*/
+	protected Grid<Agent> grid; //la grille servira à simplifier le nombre de calculs servant a savoir si un taxi est proche ou pas
 	
 	/*--------------CONSTRUCTOR-----------------*/
 	public Agent(){

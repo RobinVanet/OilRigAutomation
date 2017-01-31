@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
+import repast.simphony.space.grid.Grid;
 
 /**
  * The class used to represent the sensor array in each equipment (one agent / equipment).
@@ -65,7 +66,8 @@ public class SensorAgent extends Agent{
 	}
 
 	/*--------------CONSTRUCTOR-----------------*/
-	public SensorAgent(int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
+	public SensorAgent(Grid<Agent> grid, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
+		this.grid = grid;
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
 		this.neighborDown = neighborDown;
