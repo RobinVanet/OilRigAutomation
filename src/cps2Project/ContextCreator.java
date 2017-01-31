@@ -1,8 +1,14 @@
 package cps2Project;
 
 import repast.simphony.context.Context;
+import repast.simphony.context.space.grid.GridFactory;
+import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.space.grid.Grid;
+import repast.simphony.space.grid.GridBuilderParameters;
+import repast.simphony.space.grid.SimpleGridAdder;
+import repast.simphony.space.grid.WrapAroundBorders;
 
 /**
  * Context creating class. Creates and places all the agents of the simulation.
@@ -108,6 +114,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		boolean coolingEnabled = RunEnvironment.getInstance().getParameters().getBoolean("coolingEnabled");
 		int nextID = 1;
 		
+		/*--------------CREATION DE LA GRILLE-----------------*/
+		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
+		Grid<Agent> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Agent>(new WrapAroundBorders(), new SimpleGridAdder<Agent>(), false, 2,depthGoal));
+
 		//the system is created bottom-up :
 		//1) the downhole actuator
 		//2) the sensor agent list, ending with the upper most SA
@@ -115,7 +125,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		//4) the uphole actuators
 		
 		/*--------------CREATING THE DOWNHOLE ACTUATOR-----------------*/
-		ActuatorAgent aa = new ActuatorAgent(nextID,true,nextID+1,this,1);
+		ActuatorAgent aa = new ActuatorAgent(grid,nextID,true,nextID+1,this,1);
 		nextID++;
 		context.add(aa);
 		
@@ -126,8 +136,9 @@ public class ContextCreator implements ContextBuilder<Agent> {
 			double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 			double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 			double shutdownTemp = 150; //shutdown at 150°C for everyone
-			SensorAgent sa = new SensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
+			SensorAgent sa = new SensorAgent(grid,nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
 			context.add(sa);
+			grid.moveTo(sa, (int)startingMeasuredDepth);
 			nextID++;
 		}
 		
@@ -135,12 +146,12 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 		double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 		double shutdownTemp = 150; //shutdown at 150°C for everyone
-		UpperSensorAgent sa =  new UpperSensorAgent(nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
+		UpperSensorAgent sa =  new UpperSensorAgent(grid,nextID,nextID+1,nextID-1,nbSensor,this,startingMeasuredDepth,dangerTemp,criticalTemp,shutdownTemp,voteEnabled);
 		context.add(sa);
 		nextID++;
 		
 		/*--------------CREATING THE FIELD AGENT-----------------*/
-		FieldAgent fa = new FieldAgent(nextID,nextID-1,coolingEnabled);
+		FieldAgent fa = new FieldAgent(grid,nextID,nextID-1,coolingEnabled);
 		nextID++;
 		context.add(fa);
 		
@@ -148,7 +159,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		for (int i = 0;i<nbActuator;i++)
 		{
 			int IDFA = fa.getIDFieldAgent(); //get the ID of the Field Agent
-			aa = new ActuatorAgent(nextID,false,IDFA,this,actuatorEffectiveness);
+			aa = new ActuatorAgent(grid,nextID,false,IDFA,this,actuatorEffectiveness);
 			context.add(aa);
 			nextID++;
 		}
