@@ -2,7 +2,7 @@ package cps2Project;
 
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
-import repast.simphony.space.grid.Grid;
+import repast.simphony.space.continuous.ContinuousSpace;
 
 /**
  * The class used to represent the Field Agent of the simulation (one per well).
@@ -32,8 +32,8 @@ public class FieldAgent extends Agent{
 	}
 
 	/*--------------CONSTRUCTOR-----------------*/
-	public FieldAgent(Grid<Agent> grid,int IDFieldAgent, int IDUpperSensorAgent, boolean coolingEnabled) {
-		this.grid = grid;
+	public FieldAgent(ContinuousSpace<Agent> space,int IDFieldAgent, int IDUpperSensorAgent, boolean coolingEnabled) {
+		this.space = space;
 		this.IDFieldAgent = IDFieldAgent;
 		this.IDUpperSensorAgent = IDUpperSensorAgent;
 		this.coolingEnabled = coolingEnabled;

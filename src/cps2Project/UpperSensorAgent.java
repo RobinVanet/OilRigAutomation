@@ -3,7 +3,7 @@ package cps2Project;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
-import repast.simphony.space.grid.Grid;
+import repast.simphony.space.continuous.ContinuousSpace;
 
 /**
  * 
@@ -29,10 +29,10 @@ public class UpperSensorAgent extends SensorAgent{
 	protected boolean speedDrill = false;
 	
 	/*--------------CONSTRUCTOR-----------------*/
-	public UpperSensorAgent(Grid<Agent> grid, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor,
+	public UpperSensorAgent(ContinuousSpace<Agent> space, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor,
 			ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp,
 			boolean voteEnabled) {
-		super(grid, IDSensorAgent, neighborUp, neighborDown, nbSensor, context, measuredDepth, dangerTemp, criticalTemp,
+		super(space, IDSensorAgent, neighborUp, neighborDown, nbSensor, context, measuredDepth, dangerTemp, criticalTemp,
 				shutdownTemp, voteEnabled);
 	}
 	
@@ -51,6 +51,8 @@ public class UpperSensorAgent extends SensorAgent{
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
+		
+		space.moveTo(this, 5,context.getYCoordinates(trueDepth)); //moving the agent on the display
 		
 		if (temperature >= shutdownTemp)
 		{

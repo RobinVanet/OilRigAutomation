@@ -2,7 +2,7 @@ package cps2Project;
 
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
-import repast.simphony.space.grid.Grid;
+import repast.simphony.space.continuous.ContinuousSpace;
 
 /**
  * The class used to represent the actuators in the system.
@@ -36,8 +36,8 @@ public class ActuatorAgent extends Agent{
 	}
 
 	/*--------------CONSTRUCTOR-----------------*/
-	public ActuatorAgent(Grid<Agent> grid,int IDActuatorAgent,boolean downhole,int IDPilotAgent, ContextCreator context, double effectiveness) {
-		this.grid = grid;
+	public ActuatorAgent(ContinuousSpace<Agent> space,int IDActuatorAgent,boolean downhole,int IDPilotAgent, ContextCreator context, double effectiveness) {
+		this.space = space;
 		this.IDActuatorAgent = IDActuatorAgent;
 		this.IDPilotAgent = IDPilotAgent;
 		this.downhole = downhole;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
-import repast.simphony.space.grid.Grid;
+import repast.simphony.space.continuous.ContinuousSpace;
 
 /**
  * The class used to represent the sensor array in each equipment (one agent / equipment).
@@ -66,8 +66,8 @@ public class SensorAgent extends Agent{
 	}
 
 	/*--------------CONSTRUCTOR-----------------*/
-	public SensorAgent(Grid<Agent> grid, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
-		this.grid = grid;
+	public SensorAgent(ContinuousSpace<Agent> space, int IDSensorAgent, int neighborUp, int neighborDown, int nbSensor, ContextCreator context, double measuredDepth, double dangerTemp, double criticalTemp, double shutdownTemp, boolean voteEnabled) {
+		this.space = space;
 		this.IDSensorAgent = IDSensorAgent;
 		this.neighborUp = neighborUp;
 		this.neighborDown = neighborDown;
@@ -96,6 +96,8 @@ public class SensorAgent extends Agent{
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
+		
+		space.moveTo(this, 5,context.getYCoordinates(trueDepth)); //moving the agent on the display
 		
 		//can be used to display what the agent knows each tick.
 //		System.out.println("measuredDepth of Agent #" + IDSensorAgent + " is " + measuredDepth + " meters downhole");
@@ -126,6 +128,8 @@ public class SensorAgent extends Agent{
 			//send a message to the FA
 			messageFATooHot = !messageFATooHot;
 		}
+		
+		//grid.moveTo((Agent)this, (int)trueDepth,0);
 	}
 	
 	/**
