@@ -3,6 +3,10 @@
   <type>2D</type>
   <styles>
     <entry>
+      <string>cps2Project.GoalAgent</string>
+      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+    </entry>
+    <entry>
       <string>cps2Project.FieldAgent</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
@@ -16,6 +20,10 @@
     </entry>
   </styles>
   <editedStyles>
+    <entry>
+      <string>cps2Project.GoalAgent</string>
+      <null/>
+    </entry>
     <entry>
       <string>cps2Project.FieldAgent</string>
       <string>cps2Project.FieldAgent.style_0.xml</string>
@@ -39,23 +47,27 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>1911185103</hashCode>
+    <hashCode>-900113279</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>cps2Project.FieldAgent</string>
+      <string>cps2Project.GoalAgent</string>
       <int>0</int>
     </entry>
     <entry>
+      <string>cps2Project.FieldAgent</string>
+      <int>1</int>
+    </entry>
+    <entry>
       <string>cps2Project.SensorAgent</string>
-      <int>2</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>cps2Project.UpperSensorAgent</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
   </layerOrder>
   <projections>

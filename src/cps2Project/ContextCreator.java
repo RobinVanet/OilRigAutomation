@@ -167,6 +167,13 @@ public class ContextCreator implements ContextBuilder<Agent> {
 			nextID++;
 		}
 		
+		/*--------------CREATING THE AGENT REPRESENTING THE GOAL-----------------*/
+		GoalAgent ga = new GoalAgent();
+		ga.setGoalDepth(depthGoal);
+		context.add(ga);
+		space.moveTo(ga, 5,getYCoordinates(depthGoal));
+		
+		
 		return context;
 	}
 	
