@@ -173,6 +173,24 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		context.add(ga);
 		space.moveTo(ga, 5,getYCoordinates(depthGoal));
 		
+		/*--------------CREATING THE BACKGROUND-----------------*/
+		for (int i = 0;i<120;i++)
+		{
+			for (int j=0;j<11;j++)
+			{
+				BackgroundAgent bga = new BackgroundAgent();
+				bga.setX(j);
+				bga.setY(i);
+				//we define the air tiles
+				if (i<=10 && i!=0)
+					bga.setContent(false);
+				else //all others are ground tiles
+					bga.setContent(true);
+				context.add(bga);
+				space.moveTo(bga, j,-i);
+			}
+		}
+		
 		
 		return context;
 	}
