@@ -1,5 +1,3 @@
-visualization : look more like tools
 rename things : SensorAgent => ToolAgent; UpperSensorAgent => MWDAgent;
 extract RSS Agent in a new class (RSSAgent)
 implement the WOB and ROP part
-remove nextVoteCountdown

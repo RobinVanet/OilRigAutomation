@@ -133,7 +133,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		/*--------------CREATING THE SENSOR AGENTS-----------------*/
 		for (int i = 0;i<nbSensor-1;i++)
 		{
-			double startingMeasuredDepth = (nbSensor*10) - (10*i);
+			double startingMeasuredDepth = (nbSensor*10) - (10*(i+1));
 			double dangerTemp = 100 + (int)(Math.random() * ((125 - 100) + 1)); //random value from 100 to 125
 			double criticalTemp = 125 + (int)(Math.random() * ((150 - 125) + 1)); //random value from 125 to 150
 			double shutdownTemp = 150; //shutdown at 150°C for everyone

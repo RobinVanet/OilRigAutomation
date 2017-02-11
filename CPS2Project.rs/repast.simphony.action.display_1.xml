@@ -12,15 +12,15 @@
     </entry>
     <entry>
       <string>cps2Project.SensorAgent</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+      <string>cps2Project.BHAAgentStyle2D</string>
     </entry>
     <entry>
       <string>cps2Project.UpperSensorAgent</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+      <string>cps2Project.BHAAgentStyle2D</string>
     </entry>
     <entry>
       <string>cps2Project.BackgroundAgent</string>
-      <string>cps2Project.AgentStyle2D</string>
+      <string>cps2Project.BackgroundAgentStyle2D</string>
     </entry>
   </styles>
   <editedStyles>
@@ -34,11 +34,11 @@
     </entry>
     <entry>
       <string>cps2Project.SensorAgent</string>
-      <string>cps2Project.SensorAgent.style_6.xml</string>
+      <null/>
     </entry>
     <entry>
       <string>cps2Project.UpperSensorAgent</string>
-      <string>cps2Project.UpperSensorAgent.style_0.xml</string>
+      <null/>
     </entry>
     <entry>
       <string>cps2Project.BackgroundAgent</string>
@@ -55,7 +55,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-526203873</hashCode>
+    <hashCode>-514509796</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>

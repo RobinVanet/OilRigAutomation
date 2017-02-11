@@ -10,7 +10,7 @@ import saf.v3d.scene.VSpatial;
  * @author Robin Vanet
  *
  */
-public class AgentStyle2D extends DefaultStyleOGL2D {
+public class BackgroundAgentStyle2D extends DefaultStyleOGL2D {
 	
 	@Override
 	public Color getColor(Object o) {
