@@ -43,8 +43,6 @@ public class UpperSensorAgent extends SensorAgent{
 	@Override
 	public void compute() {
 		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
-		if (nextVoteCountdown > 0)
-			nextVoteCountdown--;
 		double speed = context.getDrillingSpeed();
 		
 		//we update the MD then ask for TVD and temp
@@ -62,13 +60,9 @@ public class UpperSensorAgent extends SensorAgent{
 		}
 		else if (temperature >= criticalTemp)
 		{
-			if (nextVoteCountdown == 0)
+			if (voteEnabled)
 			{
-				if (voteEnabled)
-				{
-					startVote();				
-					nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
-				}
+				startVote();				
 			}
 		}
 		else if (temperature >= dangerTemp)

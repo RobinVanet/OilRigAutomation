@@ -35,7 +35,6 @@ public class SensorAgent extends Agent{
 	protected ArrayList<Integer> voterIDList;
 	protected boolean voting;
 	protected boolean voteFinished;
-	protected int nextVoteCountdown; //will be used to avoid a vote spam
 	protected boolean actionAlreadyTaken;
 	
 	//measures
@@ -79,7 +78,6 @@ public class SensorAgent extends Agent{
 		this.dangerTemp = dangerTemp;
 		this.criticalTemp = criticalTemp;
 		this.shutdownTemp = shutdownTemp;
-		this.nextVoteCountdown = 0;
 		this.voteEnabled = voteEnabled;
 	}
 
@@ -90,8 +88,6 @@ public class SensorAgent extends Agent{
 	@Override
 	public void compute() {
 		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
-		if (nextVoteCountdown > 0)
-			nextVoteCountdown--;
 		double speed = context.getDrillingSpeed();
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
@@ -113,15 +109,11 @@ public class SensorAgent extends Agent{
 		}
 		else if (temperature >= criticalTemp)
 		{
-			if (nextVoteCountdown == 0)
+			//System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
+			if (voteEnabled)
 			{
-				//System.out.println("Agent #" + IDSensorAgent+ " is at "+ temperature+"°C of "+criticalTemp+" and is starting a vote!");
-				if (voteEnabled)
-				{
-					startVote();				
-					nextVoteCountdown = 20; //the agent cannot vote again before 20 ticks
-				}				
-			}
+				startVote();				
+			}				
 		}
 		else if (temperature >= dangerTemp)
 		{
