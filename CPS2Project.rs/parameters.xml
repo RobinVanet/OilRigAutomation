@@ -42,6 +42,12 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
+				<parameter name="downHoleRPMPercentage" displayName="DownHole RPM Percentage (0-100)" type="float" 
+						defaultValue="50.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
+									
+		/>
 				<parameter name="depthGoal" displayName="Depth Goal (in )" type="int" 
 						defaultValue="10000" 
 						isReadOnly="false" 

@@ -21,6 +21,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	/*--------------VARIABLES-----------------*/
 	float drillingAngle;
 	double rotationsPerMinute;
+	double minimimumRotationsPerMinute;
 	double weightOnBit;
 	float holeDiameter;
 	boolean hardFormation;
@@ -68,15 +69,9 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	 */
 	public void lowerDrillingSpeed()
 	{
-//		double previousDrillingSpeed = drillingSpeed;
-	
 		rotationsPerMinute = (rotationsPerMinute * 0.90);
-		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
-		if (rotationsPerMinute <= .01)
-				rotationsPerMinute = .01;
-		
-//		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
-		//RunEnvironment.getInstance().pauseRun();
+		if (rotationsPerMinute <= minimimumRotationsPerMinute)
+				rotationsPerMinute = minimimumRotationsPerMinute;
 	}
 	
 	/**
@@ -84,11 +79,13 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	 */
 	public void increaseDrillingSpeed()
 	{
-//		System.out.println("Taking up speed!");
 		rotationsPerMinute = (rotationsPerMinute * 1.111111111); //the opposite of slowing down
-//		RunEnvironment.getInstance().pauseRun();
 	}
 	
+	/**
+	 * Get the speed according to all the factors
+	 * @return the speed in m/min of the last minute
+	 */
 	public double getSpeed()
 	{
 		double speed = 0;
@@ -98,6 +95,13 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return speed;
 	}
 	
+	/**
+	 * Get the Weight On Bit factor in the Speed equation
+	 * 
+	 * @param weightOnBit : force applied to the tools from uphole
+	 * @param holeDiameter
+	 * @return the factor
+	 */
 	public double getWOBFactor(double weightOnBit, float holeDiameter){
 		double factor = 1;
 		factor =  (7.88 * weightOnBit)/holeDiameter;
@@ -105,6 +109,13 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return factor;
 	}
 	
+	/**
+	 * Get the Rotations Per Minute factor in the Speed equation
+	 * 
+	 * @param rotationsPerMinute : Rotations per Minute from the bit (both uphole and downhole rotation applied)
+	 * @param hardFormation : whether the formation is hard or soft
+	 * @return the factor
+	 */
 	public double getROPFactor(double rotationsPerMinute,boolean hardFormation)
 	{
 		double factor = 1;
@@ -122,6 +133,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return factor;
 	}
 
+	/**
+	 * Get the flow factor in the Speed equation
+	 * @return
+	 */
 	public double getFlowFactor()
 	{
 		return 1; //TODO : determine the flow factor
@@ -139,6 +154,8 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		int nbActuator = RunEnvironment.getInstance().getParameters().getInteger("nbActuator");
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
 		rotationsPerMinute = RunEnvironment.getInstance().getParameters().getDouble("initialRPM");
+		float downHoleRPMPercentage =  RunEnvironment.getInstance().getParameters().getFloat("downHoleRPMPercentage");
+		minimimumRotationsPerMinute = rotationsPerMinute * (100 - downHoleRPMPercentage);
 		weightOnBit = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
 		holeDiameter = RunEnvironment.getInstance().getParameters().getFloat("holeDiameter");
 		hardFormation = RunEnvironment.getInstance().getParameters().getBoolean("hardFormation");
