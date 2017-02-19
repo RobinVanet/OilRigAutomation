@@ -1,3 +1,14 @@
 rename things : SensorAgent => ToolAgent; UpperSensorAgent => MWDAgent;
 extract RSS Agent in a new class (RSSAgent)
 implement the WOB and ROP part
+
+
+DID : 
+changed the speed to all the methods (get RPM/WOB factor)
+changed min speed to min RPM
+added paramater of setting the downhole RPM part (30/50/70%?)
+
+DID NOT : 
+Change agents name
+Create the RSS Agent
+set the getFlowfactor
