@@ -12,8 +12,6 @@ import repast.simphony.space.continuous.ContinuousSpace;
  * Their goal is the preservation of the equipment through the control of the temperature,
  * but with the minimal cost in time to drill.
  * 
- * Test commit
- * 
  * @author Robin Vanet
  *
  */
