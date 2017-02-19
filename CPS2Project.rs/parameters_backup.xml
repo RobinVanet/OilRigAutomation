@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
-					<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
-						defaultValue="__NULL__"
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-									
-		/>
-				<parameter name="surfaceTemp" displayName="Surface Temperature (in degree Celsius)" type="float" 
+					<parameter name="surfaceTemp" displayName="Surface Temperature (in degree Celsius)" type="float" 
 						defaultValue="20.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 				<parameter name="actuatorEffectiveness" displayName="Actuator Effectiveness" type="double" 
-						defaultValue="1.0" 
+						defaultValue="2.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
-				<parameter name="drillingSpeed" displayName="Initial drilling speed (in m/min)" type="float" 
-						defaultValue="2.0" 
+				<parameter name="initialRPM" displayName="Initial RPM" type="double" 
+						defaultValue="100.0" 
 						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
-									
-		/>
-				<parameter name="voteEnabled" displayName="Enabling vote" type="boolean" 
-						defaultValue="true" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="nbSensor" displayName="number of Sensor Agents" type="int" 
@@ -36,14 +24,14 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="geothermalGradient" displayName="Geothermal Gradient (in Celsius/meter)" type="float" 
-						defaultValue="0.03" 
+				<parameter name="drillingAngle" displayName="Drilling Angle" type="float" 
+						defaultValue="30.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
-				<parameter name="drillingAngle" displayName="Drilling Angle" type="float" 
-						defaultValue="30.0" 
+				<parameter name="holeDiameter" displayName="Hole Diameter (inch)" type="float" 
+						defaultValue="6.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
@@ -58,6 +46,36 @@
 						defaultValue="10000" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="weightOnBit" displayName="Weight On Bit (in klbf)" type="double" 
+						defaultValue="15.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
+						defaultValue="__NULL__"
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="voteEnabled" displayName="Enabling vote" type="boolean" 
+						defaultValue="true" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+				<parameter name="coolingEnabled" displayName="Enabling cooling" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+				<parameter name="geothermalGradient" displayName="Geothermal Gradient (in Celsius/meter)" type="float" 
+						defaultValue="0.03" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
 		</parameters>

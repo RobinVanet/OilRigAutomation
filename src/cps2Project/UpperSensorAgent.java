@@ -43,7 +43,7 @@ public class UpperSensorAgent extends SensorAgent{
 	@Override
 	public void compute() {
 		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
-		double speed = context.getDrillingSpeed();
+		double speed = context.getSpeed();
 		
 		//we update the MD then ask for TVD and temp
 		measuredDepth += speed;

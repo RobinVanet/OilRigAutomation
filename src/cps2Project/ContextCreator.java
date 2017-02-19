@@ -20,7 +20,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	
 	/*--------------VARIABLES-----------------*/
 	float drillingAngle;
-	double drillingSpeed;
+	double rotationsPerMinute;
+	double weightOnBit;
+	float holeDiameter;
+	boolean hardFormation;
 	float surfaceTemp;
 	float geothermalGradient;
 	double coolDown = 0; //the cooling down taking place, starts at no cooling down 
@@ -46,15 +49,6 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return trueDepth;
 	}
 
-	
-	public double getDrillingSpeed() {
-		return drillingSpeed;
-	}
-
-	public void setDrillingSpeed(double drillingSpeed) {
-		this.drillingSpeed = drillingSpeed;
-	}
-	
 	/**
 	 * Get the temperature from a TVD with the geothermal gradient, the surface temperature, and the cooling.
 	 * 
@@ -76,10 +70,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	{
 //		double previousDrillingSpeed = drillingSpeed;
 	
-		drillingSpeed = (drillingSpeed * 0.90);
+		rotationsPerMinute = (rotationsPerMinute * 0.90);
 		//System.out.println("New drilling speed is " + drillingSpeed + "m/min");
-		if (drillingSpeed <= .01)
-				drillingSpeed = .01;
+		if (rotationsPerMinute <= .01)
+				rotationsPerMinute = .01;
 		
 //		System.out.println("Speed changed from "+previousDrillingSpeed+" m/min to "+ drillingSpeed +"m/min.");
 		//RunEnvironment.getInstance().pauseRun();
@@ -91,10 +85,48 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	public void increaseDrillingSpeed()
 	{
 //		System.out.println("Taking up speed!");
-		drillingSpeed = (drillingSpeed * 1.111111111); //the opposite of slowing down
+		rotationsPerMinute = (rotationsPerMinute * 1.111111111); //the opposite of slowing down
 //		RunEnvironment.getInstance().pauseRun();
 	}
+	
+	public double getSpeed()
+	{
+		double speed = 0;
+		double K = 1; //TODO: find a better factor
+		speed = K * getWOBFactor(weightOnBit, holeDiameter) * getROPFactor(rotationsPerMinute,hardFormation) * getFlowFactor();
+		System.out.println("Speed = "+speed);
+		return speed;
+	}
+	
+	public double getWOBFactor(double weightOnBit, float holeDiameter){
+		double factor = 1;
+		factor =  (7.88 * weightOnBit)/holeDiameter;
+		System.out.println("WOB factor = "+factor);
+		return factor;
+	}
+	
+	public double getROPFactor(double rotationsPerMinute,boolean hardFormation)
+	{
+		double factor = 1;
+		double N = rotationsPerMinute;
+		double a = (-100)/(N*N);
+		if (hardFormation)
+		{
+			factor = (Math.exp(a) * Math.pow(N,-.428))+0.2*N*(1-Math.exp(a));
+		}
+		else
+		{
+			factor = (Math.exp(a) * Math.pow(N,-.75))+0.5*N*(1-Math.exp(a));
+		}
+		System.out.println("RPM factor = "+factor);
+		return factor;
+	}
 
+	public double getFlowFactor()
+	{
+		return 1; //TODO : determine the flow factor
+	}
+	
 	/*--------------CONSTRUCTOR-----------------*/
 	/**
 	 * Function used to create and place the agents in the simulation.
@@ -106,7 +138,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		int nbSensor = RunEnvironment.getInstance().getParameters().getInteger("nbSensor");
 		int nbActuator = RunEnvironment.getInstance().getParameters().getInteger("nbActuator");
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
-		drillingSpeed = RunEnvironment.getInstance().getParameters().getFloat("drillingSpeed");
+		rotationsPerMinute = RunEnvironment.getInstance().getParameters().getDouble("initialRPM");
+		weightOnBit = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
+		holeDiameter = RunEnvironment.getInstance().getParameters().getFloat("holeDiameter");
+		hardFormation = RunEnvironment.getInstance().getParameters().getBoolean("hardFormation");
 		surfaceTemp = RunEnvironment.getInstance().getParameters().getFloat("surfaceTemp");
 		geothermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geothermalGradient");
 		double actuatorEffectiveness = RunEnvironment.getInstance().getParameters().getDouble("actuatorEffectiveness");

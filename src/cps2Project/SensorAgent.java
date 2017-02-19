@@ -88,7 +88,7 @@ public class SensorAgent extends Agent{
 	@Override
 	public void compute() {
 		actionAlreadyTaken = false; //this boolean is a quickfix to avoid having several action taken from the same vote. With that, we can only have one vote/tick (1 vote/min)
-		double speed = context.getDrillingSpeed();
+		double speed = context.getSpeed();
 		measuredDepth += speed;
 		trueDepth = context.getTrueDepth(measuredDepth);
 		temperature = context.getTemperatureFromTVD(trueDepth);
