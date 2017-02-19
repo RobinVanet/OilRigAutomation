@@ -1,11 +1,10 @@
 package cps2Project;
 
 import repast.simphony.context.Context;
-import repast.simphony.dataLoader.ContextBuilder;
-import repast.simphony.engine.environment.RunEnvironment;
-
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
+import repast.simphony.dataLoader.ContextBuilder;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.RandomCartesianAdder;
 
@@ -69,9 +68,15 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	 */
 	public void lowerDrillingSpeed()
 	{
+//		System.out.println("Current RPM = "+rotationsPerMinute);
+//		System.out.println("Minimum RPM = " + minimimumRotationsPerMinute);
+		//RunEnvironment.getInstance().pauseRun();
 		rotationsPerMinute = (rotationsPerMinute * 0.90);
 		if (rotationsPerMinute <= minimimumRotationsPerMinute)
-				rotationsPerMinute = minimimumRotationsPerMinute;
+		{
+			System.out.println("Can't slow down anymore");
+			rotationsPerMinute = minimimumRotationsPerMinute;
+		}
 	}
 	
 	/**
@@ -91,7 +96,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		double speed = 0;
 		double K = 1; //TODO: find a better factor
 		speed = K * getWOBFactor(weightOnBit, holeDiameter) * getROPFactor(rotationsPerMinute,hardFormation) * getFlowFactor();
-		System.out.println("Speed = "+speed);
+//		System.out.println("Speed = "+speed);
 		return speed;
 	}
 	
@@ -105,7 +110,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	public double getWOBFactor(double weightOnBit, float holeDiameter){
 		double factor = 1;
 		factor =  (7.88 * weightOnBit)/holeDiameter;
-		System.out.println("WOB factor = "+factor);
+//		System.out.println("WOB factor = "+factor);
 		return factor;
 	}
 	
@@ -155,7 +160,7 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		drillingAngle = RunEnvironment.getInstance().getParameters().getFloat("drillingAngle");
 		rotationsPerMinute = RunEnvironment.getInstance().getParameters().getDouble("initialRPM");
 		float downHoleRPMPercentage =  RunEnvironment.getInstance().getParameters().getFloat("downHoleRPMPercentage");
-		minimimumRotationsPerMinute = rotationsPerMinute * (100 - downHoleRPMPercentage);
+		minimimumRotationsPerMinute = rotationsPerMinute * (1 - (downHoleRPMPercentage/100));
 		weightOnBit = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
 		holeDiameter = RunEnvironment.getInstance().getParameters().getFloat("holeDiameter");
 		hardFormation = RunEnvironment.getInstance().getParameters().getBoolean("hardFormation");
