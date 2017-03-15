@@ -1,6 +1,7 @@
 rename things : SensorAgent => ToolAgent; UpperSensorAgent => MWDAgent;
 extract RSS Agent in a new class (RSSAgent)
-implement the WOB and ROP part
+time UpperSensorAgent <=> FieldAgent = f(MD)
+WOB : constant/increasgin/interactive
 
 
 DID : 

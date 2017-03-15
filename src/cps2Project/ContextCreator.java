@@ -28,6 +28,8 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	float geothermalGradient;
 	double coolDown = 0; //the cooling down taking place, starts at no cooling down 
 	int depthGoal;
+	boolean constantWOBincrease;
+	double currentSetWOB;
 	ContinuousSpaceFactory spaceFactory;
 	ContinuousSpace<Agent> space;
 
@@ -110,7 +112,6 @@ public class ContextCreator implements ContextBuilder<Agent> {
 	public double getWOBFactor(double weightOnBit, float holeDiameter){
 		double factor = 1;
 		factor =  (7.88 * weightOnBit)/holeDiameter;
-//		System.out.println("WOB factor = "+factor);
 		return factor;
 	}
 	
@@ -134,7 +135,6 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		{
 			factor = (Math.exp(a) * Math.pow(N,-.75))+0.5*N*(1-Math.exp(a));
 		}
-		System.out.println("RPM factor = "+factor);
 		return factor;
 	}
 
@@ -147,6 +147,18 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		return 1; //TODO : determine the flow factor
 	}
 	
+	public double getWeightOnBit() {
+		return weightOnBit;
+	}
+
+	public void setWeightOnBit(double weightOnBit) {
+		this.weightOnBit = weightOnBit;
+	}
+
+	public boolean isConstantWOBincrease() {
+		return constantWOBincrease;
+	}
+
 	/*--------------CONSTRUCTOR-----------------*/
 	/**
 	 * Function used to create and place the agents in the simulation.
@@ -161,9 +173,12 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		rotationsPerMinute = RunEnvironment.getInstance().getParameters().getDouble("initialRPM");
 		float downHoleRPMPercentage =  RunEnvironment.getInstance().getParameters().getFloat("downHoleRPMPercentage");
 		minimimumRotationsPerMinute = rotationsPerMinute * (1 - (downHoleRPMPercentage/100));
-		weightOnBit = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
+		//weightOnBit = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
+		weightOnBit = 0;
 		holeDiameter = RunEnvironment.getInstance().getParameters().getFloat("holeDiameter");
 		hardFormation = RunEnvironment.getInstance().getParameters().getBoolean("hardFormation");
+		constantWOBincrease = RunEnvironment.getInstance().getParameters().getBoolean("constantWOBincrease");
+		currentSetWOB = RunEnvironment.getInstance().getParameters().getDouble("currentSetWOB");
 		surfaceTemp = RunEnvironment.getInstance().getParameters().getFloat("surfaceTemp");
 		geothermalGradient =  RunEnvironment.getInstance().getParameters().getFloat("geothermalGradient");
 		double actuatorEffectiveness = RunEnvironment.getInstance().getParameters().getDouble("actuatorEffectiveness");
@@ -176,6 +191,10 @@ public class ContextCreator implements ContextBuilder<Agent> {
 		spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
 		space = spaceFactory.createContinuousSpace("space", context,new RandomCartesianAdder<Agent>(), new repast.simphony.space.continuous.WrapAroundBorders(), 11,120);
 
+		/*--------------CREATING THE READING AGENT-----------------*/
+		ReadingAgent readingAgent = new ReadingAgent(this);
+		context.add(readingAgent);
+		
 		//the system is created bottom-up :
 		//1) the downhole actuator
 		//2) the sensor agent list, ending with the upper most SA
