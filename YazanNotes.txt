@@ -1,0 +1,18 @@
+10-May-2017
+-Change the values of some initial parameters:
+WOB constant increase = true
+WOB = 1
+WOB increase per tick = true
+-Fix initial parameters naming convention.
+
+11-May-2017
+-Showing uphole actuator
+-Delete downhole actuator defined in the context creator (as the most lower sensor agent is working as an actuator).
+-Introduce the concept of "Run Starting Depth" as we are concerned about last sections of the well, i.e. 8 inch and 6.5 inch.
+-Set Total Depth (Goal Depth) to 5000 m, and starting Run Depth to 2500 m (attempt all tests on these ranges).
+-Get the signal delay as per the current meseured depth.
+-Adding context to field agent.
+-Change the criteria for // if no agent complained of being too hot, speed the drill up and reduce cooling.
+-Field agent now direclty commnuicate with context to increase the speed.
+-Remove messageSASpeedDrill() from upperSensorAgent.
+

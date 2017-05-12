@@ -7,6 +7,10 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
+      <string>cps2Project.ActuatorAgent</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
       <string>cps2Project.FieldAgent</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
@@ -27,6 +31,10 @@
     <entry>
       <string>cps2Project.GoalAgent</string>
       <string>cps2Project.GoalAgent.style_2.xml</string>
+    </entry>
+    <entry>
+      <string>cps2Project.ActuatorAgent</string>
+      <string>cps2Project.ActuatorAgent.style_0.xml</string>
     </entry>
     <entry>
       <string>cps2Project.FieldAgent</string>
@@ -55,7 +63,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-514509796</hashCode>
+    <hashCode>-504220264</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -64,6 +72,10 @@
     <entry>
       <string>cps2Project.GoalAgent</string>
       <int>1</int>
+    </entry>
+    <entry>
+      <string>cps2Project.ActuatorAgent</string>
+      <int>5</int>
     </entry>
     <entry>
       <string>cps2Project.FieldAgent</string>

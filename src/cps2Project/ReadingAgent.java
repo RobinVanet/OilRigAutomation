@@ -32,7 +32,7 @@ public class ReadingAgent extends Agent{
 		}
 		else //else the user sets it
 		{
-			double futureWOB = RunEnvironment.getInstance().getParameters().getDouble("currentSetWOB");
+			double futureWOB = RunEnvironment.getInstance().getParameters().getDouble("weightOnBit");
 			// we check to avoid impossible values
 			if (futureWOB < 0)
 				futureWOB = 0;

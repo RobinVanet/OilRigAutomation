@@ -6,25 +6,19 @@
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
-				<parameter name="actuatorEffectiveness" displayName="Actuator Effectiveness" type="double" 
-						defaultValue="2.0" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
-									
-		/>
 				<parameter name="initialRPM" displayName="Initial RPM" type="double" 
 						defaultValue="100.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
-				<parameter name="currentSetWOB" displayName="Weight on Bit (0 to 30)" type="double" 
-						defaultValue="0.0" 
+				<parameter name="actuatorEffectiveness" displayName="Actuator Effectiveness" type="double" 
+						defaultValue="1.0" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
-				<parameter name="nbSensor" displayName="number of Sensor Agents" type="int" 
+				<parameter name="nbSensor" displayName="Number of Sensor Agents" type="int" 
 						defaultValue="5" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
@@ -42,7 +36,7 @@
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
-				<parameter name="nbActuator" displayName="number of uphole Actuator Agents" type="int" 
+				<parameter name="nbActuator" displayName="Number of Uphole Actuator Agents" type="int" 
 						defaultValue="1" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
@@ -54,8 +48,26 @@
 						converter="repast.simphony.parameter.StringConverterFactory$FloatConverter"
 									
 		/>
-				<parameter name="depthGoal" displayName="Depth Goal (in )" type="int" 
-						defaultValue="10000" 
+				<parameter name="startingRunDepth" displayName="Starting Run Depth" type="double" 
+						defaultValue="4500.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="votingEnabled" displayName="Voting Enabled" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+				<parameter name="weightOnBit" displayName="WOB (0 to 30 klbf)" type="double" 
+						defaultValue="1.0" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="depthGoal" displayName="Total Depth (in m)" type="int" 
+						defaultValue="5000" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -66,28 +78,22 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="voteEnabled" displayName="Enabling vote" type="boolean" 
+				<parameter name="constantWOBincrease" displayName="WOB constant increase" type="boolean" 
 						defaultValue="true" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
 		/>
-				<parameter name="coolingEnabled" displayName="Enabling cooling" type="boolean" 
-						defaultValue="false" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
-									
-		/>
-				<parameter name="constantWOBincrease" displayName="WOB constant increase" type="boolean" 
-						defaultValue="false" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
-									
-		/>
-				<parameter name="increasePerTick" displayName="WOB increase per Tick" type="double" 
-						defaultValue="0.5" 
+				<parameter name="increasePerTick" displayName="WOB Increase per Tick (in klbf)" type="double" 
+						defaultValue="0.05" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
+									
+		/>
+				<parameter name="coolingEnabled" displayName="Cooling Enabled" type="boolean" 
+						defaultValue="true" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
 									
 		/>
 				<parameter name="geothermalGradient" displayName="Geothermal Gradient (in Celsius/meter)" type="float" 
